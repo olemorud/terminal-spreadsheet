@@ -14,6 +14,10 @@ enum cell_type {
     date
 };
 
+struct cell_list_node {
+    struct cell           *cell;
+    struct cell_list_node *next;
+};
 
 struct cell {
     struct cell_list_node *referenced_by;

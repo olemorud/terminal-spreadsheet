@@ -3,11 +3,6 @@
 #include <stdio.h>
 
 
-struct cell_list_node {
-    struct cell           *cell;
-    struct cell_list_node *next;
-};
-
 
 
 int main(int argc, char **argv){
