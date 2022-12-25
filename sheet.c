@@ -9,7 +9,7 @@ init_sheet(struct sheet *s, size_t width, size_t height, char* title)
     s->root_cell = NULL;
 
 
-    if( title ){
+    if ( title ) {
         s->title = strndup(title, MAX_STR);
     } else {
         s->title = strdup("");
