@@ -4,12 +4,14 @@ void
 init_book(struct book *b, char *title)
 {
     b->sheets = malloc(sizeof(struct sheet *) * 2);
+    b->sheets[0] = malloc(sizeof(struct sheet));
 
     init_sheet((b->sheets)[0], DEFAULT_WIDTH, DEFAULT_HEIGHT,
                DEFAULT_SHEET_TITLE "1");
+
     (b->sheets)[1] = NULL;
 
-    if (title) {
+    if (title != NULL) {
         b->title = strndup(title, MAX_STR);
     } else {
         b->title = strdup("");
