@@ -13,6 +13,7 @@ display_init()
     cbreak();
     keypad(stdscr, true);
 
+    set_escdelay(0);
     curs_set(0);
 
     start_color();
@@ -147,7 +148,7 @@ highlight(int x, int y, struct cell *c, enum modes mode)
     prev_x = x;
     prev_y = y;
     prev_c = c;
-    }
+}
 
 void
 interact()
@@ -171,29 +172,29 @@ interact()
         }
 
         if(mode == command) {
-        switch (c) {
-        case KEY_RIGHT:
-            sel_x++;
-            break;
+            switch (c) {
+            case KEY_RIGHT:
+                sel_x++;
+                break;
 
-        case KEY_LEFT:
-            if(sel_x > 0)
-                sel_x--;
-            break;
+            case KEY_LEFT:
+                if(sel_x > 0)
+                    sel_x--;
+                break;
 
-        case KEY_UP:
-            if(sel_y > 0)
-                sel_y--;
-            break;
+            case KEY_UP:
+                if(sel_y > 0)
+                    sel_y--;
+                break;
 
-        case KEY_DOWN:
-            sel_y++;
-            break;
-        
-        case 'i':
-            mode = edit;
-            break;
-        }
+            case KEY_DOWN:
+                sel_y++;
+                break;
+            
+            case 'i':
+                mode = edit;
+                break;
+            }
         }
     }
 }
