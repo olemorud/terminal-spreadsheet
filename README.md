@@ -15,5 +15,5 @@ make
 ## Run
 ```sh
 cd bin
-./spreadsheet
+./run
 ```
