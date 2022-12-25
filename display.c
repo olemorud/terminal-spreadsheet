@@ -87,12 +87,13 @@ print_sheet(struct sheet *s)
     int height = getmaxy(stdscr);
 
     int n_cells_wide = width / CELL_SIZE;
+    int n_cells_tall = height - 3;
 
     for (int i = 0; i < n_cells_wide; i++) {
         print_row_header(i);
     }
 
-    for (int i = 0; i < height; i++) {
+    for (int i = 0; i < n_cells_tall; i++) {
         addch('\n');
         print_y_axis(i);
 
