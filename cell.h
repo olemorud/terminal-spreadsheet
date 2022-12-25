@@ -33,7 +33,8 @@ struct cell {
     }                      value;
 };
 
-void init_cell(struct cell *c, size_t x_pos, size_t y_pos, char* text, enum cell_type type);
+void init_cell(struct cell *c, size_t x_pos, size_t y_pos, char *text,
+               enum cell_type type);
 void delete_cell(struct cell *c);
 
 #endif

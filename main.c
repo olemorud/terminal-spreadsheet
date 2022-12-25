@@ -1,11 +1,10 @@
-#include "config.h"
 #include "book.h"
+#include "config.h"
 #include <stdio.h>
 
-
-
-
-int main(int argc, char **argv){
+int
+main(int argc, char **argv)
+{
     struct book b;
     init_book(&b, DEFAULT_BOOK_TITLE);
 

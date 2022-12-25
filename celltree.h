@@ -12,5 +12,4 @@ struct cell_tree_node {
 
 void delete_cell_tree(struct cell_tree_node *root);
 
-
 #endif
