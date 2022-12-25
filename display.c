@@ -123,15 +123,15 @@ print_book(struct book *b, size_t tab)
 void
 highlight(int x, int y, struct cell *c, enum modes mode)
 {
-    char *text;
-
-    if (c == NULL) {
-        text = "";
-    } else {
-        text = c->text;
-    }
-
+    static int prev_x;
+    static int prev_y;
+    static struct cell *prev_c;
     int attr;
+
+    attr = (prev_x + prev_y) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
+    attron(COLOR_PAIR(attr));
+    mvprintw(prev_y+2, prev_x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
+    attroff(COLOR_PAIR(attr));
 
     if (mode == command) {
         attr = COLOR_COMMANDMODE;
@@ -140,27 +140,13 @@ highlight(int x, int y, struct cell *c, enum modes mode)
     }
 
     attron(COLOR_PAIR(attr));
-    mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", text);
+    mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", c ? c->text : "");
     attroff(COLOR_PAIR(attr));
-}
 
-void
-unhighlight(int x, int y, struct cell *c)
-{
-    char *text;
-
-    if (c == NULL) {
-        text = "";
-    } else {
-        text = c->text;
+    prev_x = x;
+    prev_y = y;
+    prev_c = c;
     }
-
-    int attr = (x + y) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
-    attron(COLOR_PAIR(attr));
-    mvprintw(y+2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", text);
-    attroff(COLOR_PAIR(attr));
-}
-
 
 void
 interact()
@@ -175,8 +161,15 @@ interact()
 
         int c = getch();
 
-        unhighlight(sel_x, sel_y, NULL);
+        if (mode == edit) {
+            set_escdelay(0);
 
+            if (c == 27) {
+                mode = command;
+            }
+        }
+
+        if(mode == command) {
         switch (c) {
         case KEY_RIGHT:
             sel_x++;
@@ -199,18 +192,7 @@ interact()
         case 'i':
             mode = edit;
             break;
-        
-        case 27:
-            mode = command;
-            break;
         }
-
-        if (c == 'i') {
-            mode = edit;
-        }
-
-        if (c == 27) {
-            mode = command;
         }
     }
 }
