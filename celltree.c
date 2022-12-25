@@ -3,7 +3,7 @@
 void
 delete_cell_tree(struct cell_tree_node *root)
 {
-    if ( !root ) {
+    if ( root==NULL ) {
         return;
     }
 
