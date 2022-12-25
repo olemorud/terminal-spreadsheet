@@ -7,13 +7,9 @@ delete_cell_tree(struct cell_tree_node *root)
         return;
     }
 
-
+    delete_cell(root->cell);
     delete_cell_tree(root->right);
     delete_cell_tree(root->left);
-
-
-    if(root->cell){
-        delete_cell(root->cell);
-        free(root);
-    }
+    
+    free(root);
 }
