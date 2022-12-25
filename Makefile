@@ -1,9 +1,9 @@
 
 CC = gcc
-CFLAGS = -g -Wall
-LIBS=
+CFLAGS = -g -Wall -Werror
+LIBS=-lncurses
 
-_OBJ = main.o book.o cell.o celltree.o sheet.o $(shell)
+_OBJ = main.o book.o cell.o celltree.o sheet.o display.o
 OBJ = $(patsubst %,obj/%,$(_OBJ))
 
 obj/%.o: %.c | objdir
