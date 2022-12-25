@@ -1,0 +1,33 @@
+
+Missing features
+----------------
+
+- [x] 1. Implement working cell edit function
+- [x] 2. Add type detection in cells
+	- [x] int64, long double, text
+	- [ ] date, functions
+- [ ] 3. Add text parsing in cells
+	- [x] parse types
+	- [ ] parse functions
+- [ ] 4. Add file saving/loading
+- [ ] 5. Implement scrolling
+
+
+
+Medium priority
+---------------
+
+- Date/time support in cells
+- Extend type detection
+
+
+Low priority
+------------
+
+[1.]
+- Avoid realloc on each append/pop when editing text in interface.c/editor_backspace()
+
+[misc.]
+- Decide and implement data structure for insertion/search of cells (currently BST, maybe red-black-tree?)
+- Use BST magic to find relevant subtree to print given a scroll_x and scroll_y
+- Remove cells from BST when they are empty
