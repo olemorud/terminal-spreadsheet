@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <err.h>
 #include "config.h"
 
 struct sheet {

@@ -20,6 +20,11 @@ init_book(struct book *b, char *title)
 void
 delete_book(struct book* b)
 {
+    if (b == NULL) {
+        warn("attempted to delete NULL book");
+        return;
+    }
+
     size_t i = 0;
     while ( (b->sheets)[i] != NULL ) {
         delete_sheet((b->sheets)[i]);

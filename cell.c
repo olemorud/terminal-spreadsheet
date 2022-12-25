@@ -16,8 +16,10 @@ init_cell(struct cell *c, size_t x_pos, size_t y_pos, char* text, enum cell_type
 void
 delete_cell(struct cell *c)
 {
-    if(c == NULL)
+    if(c == NULL){
+        warn("attempted to delete NULL cell");
         return;
+    }
 
     free(c->text);
     free(c);

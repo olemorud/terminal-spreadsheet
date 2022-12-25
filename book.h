@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "config.h"
 #include "sheet.h"
+#include <err.h>
 
 struct book {
     struct sheet **sheets;

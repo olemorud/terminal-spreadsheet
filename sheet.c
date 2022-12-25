@@ -20,6 +20,11 @@ init_sheet(struct sheet *s, size_t width, size_t height, char* title)
 void
 delete_sheet(struct sheet *s)
 {
+    if (s == NULL) {
+        warn("attempted to delete NULL sheet");
+        return;
+    }
+
     delete_cell_tree(s->root_cell);
     free(s->title);
     free(s);
