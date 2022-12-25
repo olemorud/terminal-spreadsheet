@@ -18,7 +18,11 @@
 #define COLOR_LIGHTER_GRAY 10
 #define COLOR_LIGHT_GRAY 11
 #define COLOR_GRAY 12
-#define COLOR_HIGHLIGHT 13
+#define COLOR_COMMANDMODE 13
+#define COLOR_EDITMODE 14
+
+
+enum modes {edit, command};
 
 
 //void print_cell(int n, char *content);

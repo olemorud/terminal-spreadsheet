@@ -25,8 +25,11 @@ display_init()
     init_color(COLOR_GRAY, 650, 650, 650);
     init_pair(COLOR_GRAY, COLOR_BLACK, COLOR_GRAY);
 
-    init_color(COLOR_HIGHLIGHT, 800, 600, 600);
-    init_pair(COLOR_HIGHLIGHT, COLOR_BLACK, COLOR_HIGHLIGHT);
+    init_color(COLOR_COMMANDMODE, 800, 600, 600);
+    init_pair(COLOR_COMMANDMODE, COLOR_BLACK, COLOR_COMMANDMODE);
+
+    init_color(COLOR_EDITMODE, 600, 800, 600);
+    init_pair(COLOR_EDITMODE, COLOR_BLACK, COLOR_EDITMODE);
 
     init_pair(COLOR_GREEN, COLOR_BLACK, COLOR_GREEN);
 
@@ -118,7 +121,7 @@ print_book(struct book *b, size_t tab)
 }
 
 void
-highlight(int x, int y, struct cell *c)
+highlight(int x, int y, struct cell *c, enum modes mode)
 {
     char *text;
 
@@ -128,9 +131,17 @@ highlight(int x, int y, struct cell *c)
         text = c->text;
     }
 
-    attron(COLOR_PAIR(COLOR_HIGHLIGHT));
+    int attr;
+
+    if (mode == command) {
+        attr = COLOR_COMMANDMODE;
+    } else if (mode == edit) {
+        attr = COLOR_EDITMODE;
+    }
+
+    attron(COLOR_PAIR(attr));
     mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", text);
-    attroff(COLOR_PAIR(COLOR_HIGHLIGHT));
+    attroff(COLOR_PAIR(attr));
 }
 
 void
@@ -150,34 +161,56 @@ unhighlight(int x, int y, struct cell *c)
     attroff(COLOR_PAIR(attr));
 }
 
+
 void
 interact()
 {
     static int sel_x = 0;
     static int sel_y = 0;
+    enum modes mode = command;
 
     while (1) {
-        highlight(sel_x, sel_y, NULL);
+        highlight(sel_x, sel_y, NULL, mode);
         refresh();
 
         int c = getch();
 
         unhighlight(sel_x, sel_y, NULL);
 
-        if (c == KEY_RIGHT) {
+        switch (c) {
+        case KEY_RIGHT:
             sel_x++;
-        }
+            break;
 
-        if (c == KEY_LEFT && sel_x > 0) {
-            sel_x--;
-        }
+        case KEY_LEFT:
+            if(sel_x > 0)
+                sel_x--;
+            break;
 
-        if (c == KEY_UP && sel_y > 0) {
-            sel_y--;
-        }
+        case KEY_UP:
+            if(sel_y > 0)
+                sel_y--;
+            break;
 
-        if (c == KEY_DOWN) {
+        case KEY_DOWN:
             sel_y++;
+            break;
+        
+        case 'i':
+            mode = edit;
+            break;
+        
+        case 27:
+            mode = command;
+            break;
+        }
+
+        if (c == 'i') {
+            mode = edit;
+        }
+
+        if (c == 27) {
+            mode = command;
         }
     }
 }
