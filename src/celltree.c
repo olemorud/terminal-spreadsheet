@@ -25,8 +25,9 @@ greater_than(int x_a, int y_a, int x_b, int y_b)
     return x_a > x_b;
 }
 
-struct cell*
-search_tree(struct cell_tree_node *root, int x, int y) {
+struct cell *
+search_tree(struct cell_tree_node *root, int x, int y)
+{
     if (root == NULL) {
         return NULL;
     }
@@ -37,7 +38,7 @@ search_tree(struct cell_tree_node *root, int x, int y) {
         return root->cell;
     }
 
-    if(greater_than(x, y, c->x_pos, c->y_pos)) {
+    if (greater_than(x, y, c->x_pos, c->y_pos)) {
         return search_tree(root->right, x, y);
     } else {
         return search_tree(root->left, x, y);
@@ -55,10 +56,10 @@ insert_node(struct cell_tree_node **root, struct cell *c)
         return;
     }
 
-    if (greater_than(c->x_pos, c->y_pos, (*root)->cell->x_pos, (*root)->cell->y_pos)) {
+    if (greater_than(c->x_pos, c->y_pos, (*root)->cell->x_pos,
+                     (*root)->cell->y_pos)) {
         insert_node(&(*root)->right, c);
     } else {
         insert_node(&(*root)->left, c);
     }
 }
-
