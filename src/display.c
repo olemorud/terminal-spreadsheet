@@ -2,6 +2,7 @@
 #include "display.h"
 #include <curses.h>
 #include <signal.h>
+#include "config.h"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -160,8 +161,8 @@ highlight(int x, int y, struct cell *c, enum modes mode)
 
     attr = (prev_x + prev_y) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
     attron(COLOR_PAIR(attr));
-    mvprintw(prev_y+2, prev_x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
-    attroff(COLOR_PAIR(attr));
+    mvprintw(prev_y + 2, prev_x * CELL_SIZE + Y_AXIS_WIDTH,
+             "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
 
     if (mode == command) {
         attr = COLOR_COMMANDMODE;
@@ -173,10 +174,11 @@ highlight(int x, int y, struct cell *c, enum modes mode)
     }
 
     attron(COLOR_PAIR(attr));
-    mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", c ? c->text : "");
+    mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s",
+             c ? c->text : "");
     attroff(COLOR_PAIR(attr));
 
-    move(y+2, x*CELL_SIZE + Y_AXIS_WIDTH + 1);
+    move(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH + 1);
 
     prev_x = x;
     prev_y = y;
@@ -234,7 +236,7 @@ interact(struct book *b)
             }
         }
 
-        else if(mode == command) {
+        else if (mode == command) {
             switch (c) {
             case KEY_RIGHT: case 'l': case 'e':
                 sel_x++;
@@ -253,7 +255,7 @@ interact(struct book *b)
             case KEY_DOWN: case 'j':
                 sel_y++;
                 break;
-            
+
             case 'i': case 'a':
                 mode = edit;
                 break;
