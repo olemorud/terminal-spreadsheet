@@ -16,20 +16,12 @@ main(int argc, char **argv)
 
     init_book(&b, DEFAULT_BOOK_TITLE);
 
-    b.sheets = realloc(b.sheets, 4 * sizeof(struct sheet *));
-
-    b.sheets[1] = malloc(sizeof(struct sheet));
-    init_sheet(b.sheets[1], DEFAULT_WIDTH, DEFAULT_HEIGHT,
-               DEFAULT_SHEET_TITLE "2");
-
-    b.sheets[2] = malloc(sizeof(struct sheet));
-    init_sheet(b.sheets[2], DEFAULT_WIDTH, DEFAULT_HEIGHT,
-               DEFAULT_SHEET_TITLE "3");
-
-    b.sheets[3] = NULL;
+    add_sheet(&b);
+    add_sheet(&b);
+    add_sheet(&b);
 
 
-    interact(&b, 0);
+    interact(&b);
 
     return 0;
 }

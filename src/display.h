@@ -25,14 +25,16 @@
 
 
 
-enum modes {edit, command};
+enum modes {edit, command, g};
 
 
 //void print_cell(int n, char *content);
 //void print_sheet(struct sheet *s);
 
 void print_book(struct book *b, size_t tab);
+
 void init_display();
-void interact(struct book *b, int tab);
+
+void interact(struct book *b);
 
 #endif

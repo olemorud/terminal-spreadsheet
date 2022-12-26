@@ -120,7 +120,7 @@ print_book(struct book *b, size_t tab)
     printw(" %s ", b->title);
     attroff(COLOR_PAIR(COLOR_TITLE));
 
-    for (size_t i = 0; b->sheets[i] != NULL; i++) {
+    for (size_t i = 0; i < b->n_sheets; i++) {
         int attr = tab == i ? COLOR_LIGHT_GRAY : COLOR_GRAY;
         attron(COLOR_PAIR(attr));
         printw("%10s ", b->sheets[i]->title);
@@ -166,13 +166,14 @@ highlight(int x, int y, struct cell *c, enum modes mode)
 }
 
 void
-interact(struct book *b, int tab)
+interact(struct book *b)
 {
     static int sel_x = 0;
     static int sel_y = 0;
+    static int tab = 0;
     enum modes mode = command;
 
-    print_book(b, 0);
+    print_book(b, tab);
 
     while (1) {
         highlight(sel_x, sel_y, NULL, mode);
@@ -183,6 +184,28 @@ interact(struct book *b, int tab)
         if (c == KEY_RESIZE) {
             print_book(b, tab);
             refresh();
+        }
+
+        if (mode == g) {
+            switch (c) {
+            case 't':
+                tab++;
+                if (tab >= b->n_sheets) {
+                    tab = 0;
+                }
+                print_book(b, tab);
+                break;
+
+            case 'T':
+                tab--;
+                if (tab < 0) {
+                    tab = b->n_sheets;
+                }
+                print_book(b, tab);
+                break;
+            }
+
+            mode = command;
         }
 
         if (mode == edit) {
@@ -215,6 +238,10 @@ interact(struct book *b, int tab)
             
             case 'i': case 'a':
                 mode = edit;
+                break;
+
+            case 'g':
+                mode = g;
                 break;
             }
         }

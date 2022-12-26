@@ -8,11 +8,14 @@
 
 struct book {
   struct sheet **sheets;
-  char *title;
+  size_t         n_sheets;
+  char          *title;
 };
 
 void init_book(struct book *b, char *title);
 
 void delete_book(struct book *b);
+
+void add_sheet(struct book *b);
 
 #endif
