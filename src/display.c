@@ -55,6 +55,8 @@ init_display(struct book *book)
 
     attrset(COLOR_PAIR(COLOR_BACKGROUND));
 
+    print_book(b, tab);
+
     highlight(0, 0, NULL);
 
     refresh();
@@ -222,7 +224,7 @@ void next_tab() {
 void prev_tab() {
     tab--;
     if (tab < 0) {
-        tab = b->n_sheets;
+        tab = b->n_sheets-1;
     }
     print_book(b, tab);
 }
@@ -236,15 +238,6 @@ void handle_resize(){
 void
 interact(struct book *b)
 {
-    //static int sel_x = 0;
-    //static int sel_y = 0;
-    //static int tab = 0;
-    //int width, height;
-    //int n_cells_wide;
-    //getmaxyx(stdscr, height, width);
-
-    print_book(b, tab);
-
     while (1) {
         refresh();
 
