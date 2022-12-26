@@ -9,10 +9,10 @@
 #include <err.h>
 
 enum cell_type {
-    text,
-    integer,
-    floating,
-    date
+    Text,
+    Integer,
+    Floating,
+    Date
 };
 
 struct cell_list_node {
