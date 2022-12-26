@@ -37,4 +37,6 @@ void prev_tab();
 
 void print_book(struct book *b, size_t tab);
 
+void write_status(char const *const s);
+
 #endif

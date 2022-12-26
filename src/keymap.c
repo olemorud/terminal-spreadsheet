@@ -44,6 +44,7 @@ undefined()
 void
 mode_normal()
 {
+    write_status("Normal");
     mode = Command;
     curs_set(0);
 
@@ -52,16 +53,22 @@ mode_normal()
 void
 mode_g()
 {
+    write_status("g");
     mode = G;
 }
 
 void
 mode_edit()
 {
-    mode = Edit;
-    curs_set(1);
     int x, y;
     getyx(stdscr, y, x);
+
+    mode = Edit;
+
+    write_status("Insert");
+
+    curs_set(1);
+    echo();
     move(y, x - 2);
 }
 

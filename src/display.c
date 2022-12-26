@@ -5,6 +5,7 @@
 #include <signal.h>
 #include "config.h"
 #include "keymap.h"
+#include <string.h>
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -246,6 +247,16 @@ handle_resize()
 {
     print_book(b, tab);
     refresh();
+}
+
+void
+write_status(char const *const s)
+{
+    int x, y;
+    getmaxyx(stdscr, y, x);
+
+    attron(COLOR_PAIR(COLOR_TITLE));
+    mvprintw(y-1, x-1-strlen(s), "%s", s);
 }
 
 void
