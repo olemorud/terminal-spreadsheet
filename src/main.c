@@ -10,7 +10,6 @@
 int
 main(int argc, char **argv)
 {
-    init_display();
 
     struct book b;
 
@@ -20,6 +19,7 @@ main(int argc, char **argv)
     add_sheet(&b);
     add_sheet(&b);
 
+    init_display(&b);
 
     interact(&b);
 

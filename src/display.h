@@ -6,8 +6,6 @@
 #include "book.h"
 #include "cell.h"
 #include <stdio.h>
-#include <stdio.h>
-
 
 #define COLOR_TITLE 20
 #define COLOR_BACKGROUND 21
@@ -17,18 +15,26 @@
 #define COLOR_COMMANDMODE 25
 #define COLOR_EDITMODE 26
 
+void handle_resize();
 
+void highlight(int x, int y, struct cell *c);
 
-enum modes {edit, command, g};
-
-
-//void print_cell(int n, char *content);
-//void print_sheet(struct sheet *s);
-
-void print_book(struct book *b, size_t tab);
-
-void init_display();
+void init_display(struct book *book);
 
 void interact(struct book *b);
+
+void move_down();
+
+void move_left();
+
+void move_right();
+
+void move_up();
+
+void next_tab();
+
+void prev_tab();
+
+void print_book(struct book *b, size_t tab);
 
 #endif

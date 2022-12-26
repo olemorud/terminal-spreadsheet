@@ -1,15 +1,28 @@
 
 #include "display.h"
 #include <curses.h>
+#include <ncurses.h>
 #include <signal.h>
 #include "config.h"
+#include "keymap.h"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
+
+int display_sel_x = 0;
+int display_sel_y = 0;
+int tab = 0;
+int right_scrolled = 0;
+int down_scrolled = 0;
+
+struct book *b = NULL;
+
 void
-init_display()
+init_display(struct book *book)
 {
+    b = book;
+
     initscr();
     atexit((void (*)(void))endwin);
     signal(SIGTERM, exit);
@@ -41,6 +54,8 @@ init_display()
     init_pair(COLOR_BACKGROUND, COLOR_MAGENTA, COLOR_GREEN);
 
     attrset(COLOR_PAIR(COLOR_BACKGROUND));
+
+    highlight(0, 0, NULL);
 
     refresh();
 }
@@ -113,14 +128,13 @@ print_sheet(struct sheet *s)
     attroff(COLOR_LIGHT_GRAY);
 }
 
-
 void
 print_command_bar(){
     int width, height;
 
-    getyx(stdscr, height, width);
+    getmaxyx(stdscr, height, width);
 
-    move(height+1, 0);
+    move(height-1, 0);
 
     attron(COLOR_PAIR(COLOR_TITLE));
     for (int i=0; i<width; i++) {
@@ -128,31 +142,30 @@ print_command_bar(){
     }
 }
 
-
 void
-print_book(struct book *b, size_t tab)
+print_book(struct book *bk, size_t tab)
 {
     move(0, 0);
     attron(COLOR_PAIR(COLOR_TITLE));
-    printw(" %s ", b->title);
+    printw(" %s ", bk->title);
     attroff(COLOR_PAIR(COLOR_TITLE));
 
-    for (size_t i = 0; i < b->n_sheets; i++) {
+    for (size_t i = 0; i < bk->n_sheets; i++) {
         int attr = tab == i ? COLOR_LIGHT_GRAY : COLOR_GRAY;
         attron(COLOR_PAIR(attr));
-        printw("%10s ", b->sheets[i]->title);
+        printw("%10s ", bk->sheets[i]->title);
         attroff(COLOR_PAIR(attr));
     }
 
     attron(COLOR_PAIR(COLOR_BACKGROUND));
 
-    print_sheet(b->sheets[tab]);
+    print_sheet(bk->sheets[tab]);
 
     print_command_bar();   
 }
 
 void
-highlight(int x, int y, struct cell *c, enum modes mode)
+highlight(int x, int y, struct cell *c)
 {
     static int prev_x;
     static int prev_y;
@@ -164,16 +177,7 @@ highlight(int x, int y, struct cell *c, enum modes mode)
     mvprintw(prev_y + 2, prev_x * CELL_SIZE + Y_AXIS_WIDTH,
              "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
 
-    if (mode == command) {
-        attr = COLOR_COMMANDMODE;
-        curs_set(0);
-    } else if (mode == edit) {
-        attr = COLOR_EDITMODE;
-        echo();
-        curs_set(1);
-    }
-
-    attron(COLOR_PAIR(attr));
+    attron(COLOR_PAIR(COLOR_COMMANDMODE));
     mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s",
              c ? c->text : "");
     attroff(COLOR_PAIR(attr));
@@ -185,85 +189,66 @@ highlight(int x, int y, struct cell *c, enum modes mode)
     prev_c = c;
 }
 
+void move_right() {
+    display_sel_x++;
+    highlight(display_sel_x, display_sel_y, NULL);
+}
+
+void move_left(){
+    if(display_sel_x > 0)
+        display_sel_x--;
+    highlight(display_sel_x, display_sel_y, NULL);
+}
+
+void move_up() {
+    if(display_sel_y > 0)
+        display_sel_y--;
+    highlight(display_sel_x, display_sel_y, NULL);
+}
+
+void move_down() {
+    display_sel_y++;
+    highlight(display_sel_x, display_sel_y, NULL);
+}
+
+void next_tab() {
+    tab++;
+    if (tab >= b->n_sheets) {
+        tab = 0;
+    }
+    print_book(b, tab);
+}
+
+void prev_tab() {
+    tab--;
+    if (tab < 0) {
+        tab = b->n_sheets;
+    }
+    print_book(b, tab);
+}
+
+void handle_resize(){
+    print_book(b, tab);
+    refresh();
+}
+
+
 void
 interact(struct book *b)
 {
-    static int sel_x = 0;
-    static int sel_y = 0;
-    static int tab = 0;
-    enum modes mode = command;
+    //static int sel_x = 0;
+    //static int sel_y = 0;
+    //static int tab = 0;
+    //int width, height;
+    //int n_cells_wide;
+    //getmaxyx(stdscr, height, width);
 
     print_book(b, tab);
 
     while (1) {
-        highlight(sel_x, sel_y, NULL, mode);
         refresh();
 
         int c = getch();
-
-        if (c == KEY_RESIZE) {
-            print_book(b, tab);
-            refresh();
-        }
-
-        if (mode == g) {
-            switch (c) {
-            case 't':
-                tab++;
-                if (tab >= b->n_sheets) {
-                    tab = 0;
-                }
-                print_book(b, tab);
-                break;
-
-            case 'T':
-                tab--;
-                if (tab < 0) {
-                    tab = b->n_sheets;
-                }
-                print_book(b, tab);
-                break;
-            }
-
-            mode = command;
-        }
-
-        if (mode == edit) {
-            switch (c) {
-            case 27:
-                mode = command;
-                break;
-            }
-        }
-
-        else if (mode == command) {
-            switch (c) {
-            case KEY_RIGHT: case 'l': case 'e':
-                sel_x++;
-                break;
-
-            case KEY_LEFT: case 'h': case 'b':
-                if(sel_x > 0)
-                    sel_x--;
-                break;
-
-            case KEY_UP: case 'k':
-                if(sel_y > 0)
-                    sel_y--;
-                break;
-
-            case KEY_DOWN: case 'j':
-                sel_y++;
-                break;
-
-            case 'i': case 'a':
-                mode = edit;
-                break;
-
-            case 'g':
-                mode = g;
-                break;
-            }
-        }
+        parse_key(c);
     }
 }
