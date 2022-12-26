@@ -10,7 +10,7 @@
 int
 main(int argc, char **argv)
 {
-    display_init();
+    init_display();
 
     struct book b;
 

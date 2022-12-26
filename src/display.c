@@ -6,7 +6,7 @@
 #define STR(x) _STR(x)
 
 void
-display_init()
+init_display()
 {
     initscr();
     noecho();
