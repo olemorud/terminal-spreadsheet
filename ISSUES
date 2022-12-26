@@ -1,0 +1,26 @@
+
+Missing features
+----------------
+
+- 1. Implement working cell edit function
+- 2. Add type detection in cells
+- 3. Add text parsing in cells
+- 4. Add file saving/loading
+
+
+
+Medium priority
+---------------
+
+- Somehow refactor display.c and keybinds.c
+  - maybe split display.c into interface.c and graphics.c
+
+
+Low priority
+------------
+
+[1.]
+- Avoid realloc on each append/pop when editing text in display.c/editor_backspace()
+
+[misc.]
+- Find better data structure for insertion/search of cells (currently BST)
