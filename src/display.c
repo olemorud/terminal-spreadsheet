@@ -35,8 +35,13 @@ init_display()
     init_color(COLOR_EDITMODE, 600, 800, 600);
     init_pair(COLOR_EDITMODE, COLOR_BLACK, COLOR_EDITMODE);
 
-    init_pair(COLOR_GREEN, COLOR_BLACK, COLOR_GREEN);
+    init_pair(COLOR_TITLE, COLOR_BLACK, COLOR_GREEN);
 
+    init_pair(COLOR_BACKGROUND, COLOR_MAGENTA, COLOR_GREEN);
+
+    attrset(COLOR_PAIR(COLOR_BACKGROUND));
+
+    refresh();
 }
 
 void
@@ -111,9 +116,10 @@ print_sheet(struct sheet *s)
 void
 print_book(struct book *b, size_t tab)
 {
-    attron(COLOR_PAIR(COLOR_GREEN));
-    printw("%s", b->title);
-    attroff(COLOR_PAIR(COLOR_GREEN));
+    move(0, 0);
+    attron(COLOR_PAIR(COLOR_TITLE));
+    printw(" %s ", b->title);
+    attroff(COLOR_PAIR(COLOR_TITLE));
 
     for (size_t i = 0; b->sheets[i] != NULL; i++) {
         int attr = tab == i ? COLOR_LIGHT_GRAY : COLOR_GRAY;
@@ -121,6 +127,8 @@ print_book(struct book *b, size_t tab)
         printw("%10s ", b->sheets[i]->title);
         attroff(COLOR_PAIR(attr));
     }
+
+    attron(COLOR_PAIR(COLOR_BACKGROUND));
 
     print_sheet(b->sheets[tab]);
 }
