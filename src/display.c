@@ -23,12 +23,22 @@ int down_scrolled = 0;
 struct book *b = NULL;
 
 void
+cleanup()
+{
+    clear();
+    echo();
+    curs_set(1);
+    refresh();
+    endwin();
+}
+
+void
 init_display(struct book *book)
 {
     b = book;
 
     initscr();
-    atexit((void (*)(void))endwin);
+    atexit(cleanup);
     signal(SIGTERM, exit);
     noecho();
     cbreak();
