@@ -7,6 +7,8 @@ void mode_g();
 void mode_edit();
 void mode_normal();
 
+enum modes mode = Command;
+
 void *keymap_always[1024] = {
     [KEY_RESIZE] = handle_resize,
     [27] /*ESC*/ = mode_normal,
@@ -26,7 +28,6 @@ void *keymap_normal[1024] = {
     ['l']       = move_right,
 };
 
-enum modes mode = Command;
 
 void *keymap_g[1024] = {
     ['t'] = next_tab,
@@ -73,7 +74,7 @@ mode_edit()
 void
 parse_key(size_t c)
 {
-    void (*cmd)(void);
+    void (*cmd)(void) = NULL;
 
     switch (mode) {
     case Command:
@@ -81,11 +82,14 @@ parse_key(size_t c)
         break;
     case G:
         cmd = keymap_g[c];
-        mode = Command;
         break;
     case Edit:
         cmd = NULL;
         break;
+    }
+
+    if(mode != Edit) {
+        mode = Command;
     }
 
     if (cmd == NULL) {
