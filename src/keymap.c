@@ -10,12 +10,12 @@ void mode_normal();
 
 enum modes mode = Command;
 
-void *keymap_always[1024] = {
+void * const keymap_always[1024] = {
     [KEY_RESIZE] = handle_resize,
     [27] /*ESC*/ = mode_normal,
 };
 
-void *keymap_normal[1024] = {
+void * const keymap_normal[1024] = {
     ['i']       = mode_edit,
     ['a']       = mode_edit,
     ['g']       = mode_g,
@@ -29,8 +29,12 @@ void *keymap_normal[1024] = {
     ['l']       = move_right,
 };
 
+void * const keymap_edit[1024] = {
+    [27]            = mode_normal,
+    [KEY_BACKSPACE] = editor_backspace,
+};
 
-void *keymap_g[1024] = {
+void * const keymap_g[1024] = {
     ['t'] = next_tab,
     ['T'] = prev_tab,
 };
@@ -85,7 +89,11 @@ parse_key(size_t c)
         cmd = keymap_g[c];
         break;
     case Edit:
-        cmd = NULL;
+        cmd = keymap_edit[c];
+        if (cmd == NULL){
+            editor_append(c);
+            return;
+        }
         break;
     }
 
