@@ -15,4 +15,8 @@ struct cell_tree_node {
 
 void delete_cell_tree(struct cell_tree_node *root);
 
+struct cell *search_tree(struct cell_tree_node *root, int x, int y);
+
+void insert_node(struct cell_tree_node **root, struct cell *c);
+
 #endif
