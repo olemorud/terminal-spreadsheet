@@ -10,15 +10,13 @@
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
-
 void highlight(int const row, int const col, struct cell *c);
 
-
-int display_sel_x = 0;
-int display_sel_y = 0;
-int tab = 0;
-int right_scrolled = 0;
-int down_scrolled = 0;
+int g_display_sel_x = 0;
+int g_display_sel_y = 0;
+int g_tab = 0;
+//int g_right_scrolled = 0;
+//int g_down_scrolled = 0;
 
 struct book *b = NULL;
 
@@ -69,7 +67,7 @@ init_display(struct book *book)
 
     attrset(COLOR_PAIR(COLOR_BACKGROUND));
 
-    print_book(b, tab);
+    print_book(b, g_tab);
 
     highlight(0, 0, NULL);
     write_right_status("Normal");
@@ -219,57 +217,57 @@ highlight(int const x, int const y, struct cell *c)
 void
 move_right()
 {
-    display_sel_x++;
-    highlight(display_sel_x, display_sel_y, NULL);
+    g_display_sel_x++;
+    highlight(g_display_sel_x, g_display_sel_y, NULL);
 }
 
 void
 move_left()
 {
-    if (display_sel_x > 0)
-        display_sel_x--;
-    highlight(display_sel_x, display_sel_y, NULL);
+    if (g_display_sel_x > 0)
+        g_display_sel_x--;
+    highlight(g_display_sel_x, g_display_sel_y, NULL);
 }
 
 void
 move_up()
 {
-    if (display_sel_y > 0)
-        display_sel_y--;
-    highlight(display_sel_x, display_sel_y, NULL);
+    if (g_display_sel_y > 0)
+        g_display_sel_y--;
+    highlight(g_display_sel_x, g_display_sel_y, NULL);
 }
 
 void
 move_down()
 {
-    display_sel_y++;
-    highlight(display_sel_x, display_sel_y, NULL);
+    g_display_sel_y++;
+    highlight(g_display_sel_x, g_display_sel_y, NULL);
 }
 
 void
 next_tab()
 {
-    tab++;
-    if (tab >= b->n_sheets) {
-        tab = 0;
+    g_tab++;
+    if (g_tab >= b->n_sheets) {
+        g_tab = 0;
     }
-    print_book(b, tab);
+    print_book(b, g_tab);
 }
 
 void
 prev_tab()
 {
-    tab--;
-    if (tab < 0) {
-        tab = b->n_sheets - 1;
+    g_tab--;
+    if (g_tab < 0) {
+        g_tab = b->n_sheets - 1;
     }
-    print_book(b, tab);
+    print_book(b, g_tab);
 }
 
 void
 handle_resize()
 {
-    print_book(b, tab);
+    print_book(b, g_tab);
     refresh();
 }
 
