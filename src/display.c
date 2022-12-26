@@ -9,7 +9,6 @@
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
-
 int display_sel_x = 0;
 int display_sel_y = 0;
 int tab = 0;
@@ -131,15 +130,16 @@ print_sheet(struct sheet *s)
 }
 
 void
-print_command_bar(){
+print_command_bar()
+{
     int width, height;
 
     getmaxyx(stdscr, height, width);
 
-    move(height-1, 0);
+    move(height - 1, 0);
 
     attron(COLOR_PAIR(COLOR_TITLE));
-    for (int i=0; i<width; i++) {
+    for (int i = 0; i < width; i++) {
         addch(' ');
     }
 }
@@ -163,7 +163,7 @@ print_book(struct book *bk, size_t tab)
 
     print_sheet(bk->sheets[tab]);
 
-    print_command_bar();   
+    print_command_bar();
 }
 
 void
@@ -191,29 +191,39 @@ highlight(int x, int y, struct cell *c)
     prev_c = c;
 }
 
-void move_right() {
+void
+move_right()
+{
     display_sel_x++;
     highlight(display_sel_x, display_sel_y, NULL);
 }
 
-void move_left(){
-    if(display_sel_x > 0)
+void
+move_left()
+{
+    if (display_sel_x > 0)
         display_sel_x--;
     highlight(display_sel_x, display_sel_y, NULL);
 }
 
-void move_up() {
-    if(display_sel_y > 0)
+void
+move_up()
+{
+    if (display_sel_y > 0)
         display_sel_y--;
     highlight(display_sel_x, display_sel_y, NULL);
 }
 
-void move_down() {
+void
+move_down()
+{
     display_sel_y++;
     highlight(display_sel_x, display_sel_y, NULL);
 }
 
-void next_tab() {
+void
+next_tab()
+{
     tab++;
     if (tab >= b->n_sheets) {
         tab = 0;
@@ -221,19 +231,22 @@ void next_tab() {
     print_book(b, tab);
 }
 
-void prev_tab() {
+void
+prev_tab()
+{
     tab--;
     if (tab < 0) {
-        tab = b->n_sheets-1;
+        tab = b->n_sheets - 1;
     }
     print_book(b, tab);
 }
 
-void handle_resize(){
+void
+handle_resize()
+{
     print_book(b, tab);
     refresh();
 }
-
 
 void
 interact(struct book *b)
