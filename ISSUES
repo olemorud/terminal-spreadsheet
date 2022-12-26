@@ -23,4 +23,4 @@ Low priority
 - Avoid realloc on each append/pop when editing text in display.c/editor_backspace()
 
 [misc.]
-- Find better data structure for insertion/search of cells (currently BST)
+- Decide and implement data structure for insertion/search of cells (currently BST, maybe red-black-tree?)
