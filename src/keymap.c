@@ -4,12 +4,17 @@
 #include <curses.h>
 
 void mode_g();
+void mode_edit();
+void mode_normal();
 
-void* keymap_always[1024] = {
+void *keymap_always[1024] = {
     [KEY_RESIZE] = handle_resize,
+    [27] /*ESC*/ = mode_normal,
 };
 
-void* keymap_normal[1024] = {
+void *keymap_normal[1024] = {
+    ['i']       = mode_edit,
+    ['a']       = mode_edit,
     [KEY_LEFT]  = move_left,
     ['h']       = move_left,
     [KEY_DOWN]  = move_down,
@@ -21,40 +26,64 @@ void* keymap_normal[1024] = {
     ['g']       = mode_g,
 };
 
-enum modes mode = command;
+enum modes mode = Command;
 
-void* keymap_g[1024] = {
+void *keymap_g[1024] = {
     ['t'] = next_tab,
     ['T'] = prev_tab,
 };
 
-void undefined() {
+void
+undefined()
+{
     int height = getmaxy(stdscr);
-    move(height-1, 0);
+    move(height - 1, 0);
     printw("key not defined");
 }
 
-void mode_g() {
-    mode = g;
+void
+mode_normal()
+{
+    mode = Command;
+    curs_set(0);
+
 }
 
-void parse_key(size_t c) {
+void
+mode_g()
+{
+    mode = G;
+}
+
+void
+mode_edit()
+{
+    mode = Edit;
+    curs_set(1);
+    int x, y;
+    getyx(stdscr, y, x);
+    move(y, x - 2);
+}
+
+void
+parse_key(size_t c)
+{
     void (*cmd)(void);
 
-    switch(mode) {
-    case command:
+    switch (mode) {
+    case Command:
         cmd = keymap_normal[c];
         break;
-    case g:
+    case G:
         cmd = keymap_g[c];
-        mode = command;
+        mode = Command;
         break;
-    case edit:
+    case Edit:
         cmd = NULL;
         break;
     }
 
-    if(cmd == NULL) {
+    if (cmd == NULL) {
         cmd = keymap_always[c];
 
         if (cmd == NULL) {

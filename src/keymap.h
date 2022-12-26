@@ -10,7 +10,6 @@
 
 void parse_key(size_t c);
 
-
-enum modes {edit, command, g};
+enum modes {Edit, Command, G};
 
 #endif
