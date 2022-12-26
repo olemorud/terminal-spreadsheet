@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 #include <err.h>
-#include "display.h"
+#include "draw.h"
 #include <ncurses.h>
 #include <stddef.h>
 

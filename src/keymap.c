@@ -1,6 +1,7 @@
 
 #include "keymap.h"
-#include "display.h"
+#include "draw.h"
+#include "interface.h"
 #include <curses.h>
 
 void mode_g();

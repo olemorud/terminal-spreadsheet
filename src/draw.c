@@ -1,5 +1,5 @@
 
-#include "display.h"
+#include "draw.h"
 #include "cell.h"
 #include "celltree.h"
 #include <curses.h>
@@ -14,15 +14,6 @@
 
 void highlight(int const row, int const col, struct cell *c);
 
-int g_display_sel_x = 0;
-int g_display_sel_y = 0;
-int g_tab = 0;
-//int g_right_scrolled = 0;
-//int g_down_scrolled = 0;
-
-struct book *b = NULL;
-struct cell *cur = NULL;
-
 void
 cleanup()
 {
@@ -34,9 +25,8 @@ cleanup()
 }
 
 void
-init_display(struct book *book)
+init_draw(struct book *book)
 {
-    b = book;
 
     initscr();
     atexit(cleanup);
@@ -70,7 +60,7 @@ init_display(struct book *book)
 
     attrset(COLOR_PAIR(COLOR_BACKGROUND));
 
-    print_book(b, g_tab);
+    draw_book(book, 0);
 
     highlight(0, 0, NULL);
     write_right_status("Normal");
@@ -85,7 +75,7 @@ get_cell_color(int const row, int const col)
 }
 
 void
-print_cell(int row, int col, char *content)
+draw_cell(int row, int col, char *content)
 {
     int color;
 
@@ -101,7 +91,7 @@ print_cell(int row, int col, char *content)
 }
 
 void
-print_y_axis(int n)
+draw_row_num(int n)
 {
     attron(COLOR_PAIR(COLOR_GRAY));
     printw("%" STR(Y_AXIS_WIDTH) "d", n);
@@ -109,7 +99,7 @@ print_y_axis(int n)
 }
 
 void
-print_row_header(int row)
+draw_row_header(int row)
 {
     char buf[4] = "   ";
     row++;
@@ -128,7 +118,7 @@ print_row_header(int row)
 }
 
 void
-print_sheet(struct sheet *s)
+draw_sheet(struct sheet *s)
 {
     addch('\n');
     attron(COLOR_PAIR(COLOR_GRAY));
@@ -141,22 +131,22 @@ print_sheet(struct sheet *s)
     int n_cells_wide = width / CELL_SIZE;
 
     for (int i = 0; i < n_cells_wide; i++) {
-        print_row_header(i);
+        draw_row_header(i);
     }
 
     for (int row = 0; row < height; row++) {
         addch('\n');
-        print_y_axis(row);
+        draw_row_num(row);
 
         for (int col = 0; col < n_cells_wide; col++) {
-            print_cell(row, col, NULL);
+            draw_cell(row, col, NULL);
         }
     }
     attroff(COLOR_LIGHT_GRAY);
 }
 
 void
-print_command_bar()
+draw_input_bar()
 {
     int width, height;
 
@@ -171,7 +161,7 @@ print_command_bar()
 }
 
 void
-print_book(struct book *bk, size_t tab)
+draw_book(struct book *bk, size_t tab)
 {
     move(0, 0);
     attron(COLOR_PAIR(COLOR_TITLE));
@@ -187,11 +177,13 @@ print_book(struct book *bk, size_t tab)
 
     attron(COLOR_PAIR(COLOR_BACKGROUND));
 
-    print_sheet(bk->sheets[tab]);
+    draw_sheet(bk->sheets[tab]);
 
-    print_command_bar();
+    draw_input_bar();
 }
 
+
+/* highlights relative to screen */
 void
 highlight(int const x, int const y, struct cell *c)
 {
@@ -218,84 +210,10 @@ highlight(int const x, int const y, struct cell *c)
 }
 
 void
-move_right()
+handle_resize(struct book* b, int tab)
 {
-    g_display_sel_x++;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
-}
-
-void
-move_left()
-{
-    if (g_display_sel_x > 0)
-        g_display_sel_x--;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
-}
-
-void
-move_up()
-{
-    if (g_display_sel_y > 0)
-        g_display_sel_y--;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
-}
-
-void
-move_down()
-{
-    g_display_sel_y++;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
-}
-
-void
-next_tab()
-{
-    g_tab++;
-    if (g_tab >= b->n_sheets) {
-        g_tab = 0;
-    }
-    print_book(b, g_tab);
-}
-
-void
-prev_tab()
-{
-    g_tab--;
-    if (g_tab < 0) {
-        g_tab = b->n_sheets - 1;
-    }
-    print_book(b, g_tab);
-}
-
-void
-handle_resize()
-{
-    print_book(b, g_tab);
+    draw_book(b, tab);
     refresh();
-}
-
-void
-write_right_status(char const *const s)
-{
-    int x, y;
-    getmaxyx(stdscr, y, x);
-
-    attron(COLOR_PAIR(COLOR_TITLE));
-    mvprintw(y - 1, x - 1 - strlen(s), "%s", s);
-    attron(COLOR_PAIR(COLOR_TITLE));
-}
-
-
-void
-editor_backspace()
-{
-    int x, y;
-    getyx(stdscr, x, y);
-
-    if(cur->text)
-
-    addch(' ');
-    move(y, x-1);
 }
 
 void
@@ -308,28 +226,3 @@ write_left_command(char const *const s)
     attron(COLOR_PAIR(COLOR_TITLE));
 }
 
-void
-start_edit_cell()
-{
-    /* struct cell* cur */
-    cur = search_tree(b->sheets[g_tab]->root_cell, g_display_sel_x, g_display_sel_y);
-
-    if (cur == NULL) {
-        cur = malloc(sizeof(struct cell));
-        init_cell(cur, g_display_sel_x, g_display_sel_y, "", Text);
-        insert_node(&b->sheets[g_tab]->root_cell, cur);
-    }
-
-    write_left_command(cur->text);
-}
-
-void
-interact(struct book *b)
-{
-    while (1) {
-        refresh();
-
-        int c = getch();
-        parse_key(c);
-    }
-}

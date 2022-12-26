@@ -12,8 +12,6 @@ Missing features
 Medium priority
 ---------------
 
-- Somehow refactor display.c and keybinds.c
-  - maybe split display.c into interface.c and graphics.c
 
 
 Low priority

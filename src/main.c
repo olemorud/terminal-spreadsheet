@@ -1,6 +1,7 @@
 #include "book.h"
-#include "display.h"
+#include "draw.h"
 #include "config.h"
+#include "interface.h"
 #include "sheet.h"
 #include <curses.h>
 #include <stdio.h>
@@ -19,7 +20,8 @@ main(int argc, char **argv)
     add_sheet(&b);
     add_sheet(&b);
 
-    init_display(&b);
+    init_draw(&b);
+    init_interface(&b);
 
     interact(&b);
 
