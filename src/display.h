@@ -41,4 +41,6 @@ void write_right_status(char const *const s);
 
 int get_cell_color(int const row, int const col);
 
+void start_edit_cell();
+
 #endif

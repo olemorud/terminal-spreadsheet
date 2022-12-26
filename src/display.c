@@ -1,5 +1,7 @@
 
 #include "display.h"
+#include "cell.h"
+#include "celltree.h"
 #include <curses.h>
 #include <ncurses.h>
 #include <signal.h>
@@ -19,6 +21,7 @@ int g_tab = 0;
 //int g_down_scrolled = 0;
 
 struct book *b = NULL;
+struct cell *cur = NULL;
 
 void
 cleanup()
@@ -280,6 +283,44 @@ write_right_status(char const *const s)
     attron(COLOR_PAIR(COLOR_TITLE));
     mvprintw(y - 1, x - 1 - strlen(s), "%s", s);
     attron(COLOR_PAIR(COLOR_TITLE));
+}
+
+
+void
+editor_backspace()
+{
+    int x, y;
+    getyx(stdscr, x, y);
+
+    if(cur->text)
+
+    addch(' ');
+    move(y, x-1);
+}
+
+void
+write_left_command(char const *const s)
+{
+    int y = getmaxy(stdscr);
+
+    attron(COLOR_PAIR(COLOR_TITLE));
+    mvprintw(y - 1, 1, "%s", s);
+    attron(COLOR_PAIR(COLOR_TITLE));
+}
+
+void
+start_edit_cell()
+{
+    /* struct cell* cur */
+    cur = search_tree(b->sheets[g_tab]->root_cell, g_display_sel_x, g_display_sel_y);
+
+    if (cur == NULL) {
+        cur = malloc(sizeof(struct cell));
+        init_cell(cur, g_display_sel_x, g_display_sel_y, "", Text);
+        insert_node(&b->sheets[g_tab]->root_cell, cur);
+    }
+
+    write_left_command(cur->text);
 }
 
 void

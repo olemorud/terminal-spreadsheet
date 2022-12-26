@@ -60,16 +60,14 @@ mode_g()
 void
 mode_edit()
 {
-    int x, y;
-    getyx(stdscr, y, x);
-
     mode = Edit;
 
     write_right_status("Insert");
 
     curs_set(1);
     echo();
-    move(y, x - 2);
+
+    start_edit_cell();
 }
 
 void
