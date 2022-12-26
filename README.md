@@ -1,7 +1,7 @@
 
 # Terminal spreadsheet
 
-![spreadsheet](https://user-images.githubusercontent.com/82065181/209483923-8e0b09a3-f63d-4292-94ed-c5dc47e9df33.png)
+![spreadsheet2](https://user-images.githubusercontent.com/82065181/209571188-7c1e90ca-d7f4-4de7-adc4-64000e6bf0f2.png)
 
 This is a WIP spreadsheet application for the terminal using ncurses.
 
