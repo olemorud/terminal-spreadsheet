@@ -6,6 +6,7 @@ Missing features
 - 2. Add type detection in cells
 - 3. Add text parsing in cells
 - 4. Add file saving/loading
+- 5. Implement scrolling
 
 
 
@@ -18,7 +19,7 @@ Low priority
 ------------
 
 [1.]
-- Avoid realloc on each append/pop when editing text in display.c/editor_backspace()
+- Avoid realloc on each append/pop when editing text in interface.c/editor_backspace()
 
 [misc.]
 - Decide and implement data structure for insertion/search of cells (currently BST, maybe red-black-tree?)
