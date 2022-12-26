@@ -50,8 +50,8 @@ insert_node(struct cell_tree_node **root, struct cell *c)
     if (*root == NULL) {
         *root = malloc(sizeof(struct cell_tree_node));
         (*root)->cell = c;
-        (*root)->right->left = NULL;
-        (*root)->right->right = NULL;
+        (*root)->right = NULL;
+        (*root)->left = NULL;
         return;
     }
 
