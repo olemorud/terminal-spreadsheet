@@ -1,6 +1,7 @@
 
 #include "display.h"
 #include <curses.h>
+#include <signal.h>
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -9,6 +10,8 @@ void
 init_display()
 {
     initscr();
+    atexit((void (*)(void))endwin);
+    signal(SIGTERM, exit);
     noecho();
     cbreak();
     keypad(stdscr, true);
