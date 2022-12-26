@@ -6,7 +6,7 @@
 #include <err.h>
 #include "display.h"
 #include <ncurses.h>
-#include <sys/types.h>
+#include <stddef.h>
 
 void parse_key(size_t c);
 

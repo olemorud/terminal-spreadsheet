@@ -154,7 +154,7 @@ print_book(struct book *bk, size_t tab)
     attroff(COLOR_PAIR(COLOR_TITLE));
 
     for (size_t i = 0; i < bk->n_sheets; i++) {
-        int attr = tab == i ? COLOR_LIGHT_GRAY : COLOR_GRAY;
+        int attr = tab == i ? COLOR_GRAY : COLOR_LIGHT_GRAY;
         attron(COLOR_PAIR(attr));
         printw("%10s ", bk->sheets[i]->title);
         attroff(COLOR_PAIR(attr));

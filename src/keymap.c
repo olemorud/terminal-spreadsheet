@@ -15,6 +15,7 @@ void *keymap_always[1024] = {
 void *keymap_normal[1024] = {
     ['i']       = mode_edit,
     ['a']       = mode_edit,
+    ['g']       = mode_g,
     [KEY_LEFT]  = move_left,
     ['h']       = move_left,
     [KEY_DOWN]  = move_down,
@@ -23,7 +24,6 @@ void *keymap_normal[1024] = {
     ['k']       = move_up,
     [KEY_RIGHT] = move_right,
     ['l']       = move_right,
-    ['g']       = mode_g,
 };
 
 enum modes mode = Command;
