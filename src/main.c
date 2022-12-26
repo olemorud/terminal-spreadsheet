@@ -28,13 +28,8 @@ main(int argc, char **argv)
 
     b.sheets[3] = NULL;
 
-    //printf("%s", b.sheets[0]->title);
 
-    print_book(&b, 0);
-    
-    interact();
-
-    endwin();
+    interact(&b, 0);
 
     return 0;
 }

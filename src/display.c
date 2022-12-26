@@ -75,7 +75,7 @@ print_row_header(int row)
 
     while (row) {
         i++;
-        buf[3 - i] = (row % 26) + L'A' - 1;
+        buf[3 - i] = (row % 26) + 'A' - 1;
         row /= 26;
     }
 
@@ -92,17 +92,16 @@ print_sheet(struct sheet *s)
     printw("%" STR(Y_AXIS_WIDTH) "s", "");
     attroff(COLOR_PAIR(COLOR_GRAY));
 
-    int width = getmaxx(stdscr);
-    int height = getmaxy(stdscr);
+    int width = getmaxx(stdscr) - Y_AXIS_WIDTH;
+    int height = getmaxy(stdscr) - 3;
 
     int n_cells_wide = width / CELL_SIZE;
-    int n_cells_tall = height - 3;
 
     for (int i = 0; i < n_cells_wide; i++) {
         print_row_header(i);
     }
 
-    for (int i = 0; i < n_cells_tall; i++) {
+    for (int i = 0; i < height; i++) {
         addch('\n');
         print_y_axis(i);
 
@@ -148,13 +147,18 @@ highlight(int x, int y, struct cell *c, enum modes mode)
 
     if (mode == command) {
         attr = COLOR_COMMANDMODE;
+        curs_set(0);
     } else if (mode == edit) {
         attr = COLOR_EDITMODE;
+        echo();
+        curs_set(1);
     }
 
     attron(COLOR_PAIR(attr));
     mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s", c ? c->text : "");
     attroff(COLOR_PAIR(attr));
+
+    move(y+2, x*CELL_SIZE + Y_AXIS_WIDTH + 1);
 
     prev_x = x;
     prev_y = y;
@@ -162,11 +166,13 @@ highlight(int x, int y, struct cell *c, enum modes mode)
 }
 
 void
-interact()
+interact(struct book *b, int tab)
 {
     static int sel_x = 0;
     static int sel_y = 0;
     enum modes mode = command;
+
+    print_book(b, 0);
 
     while (1) {
         highlight(sel_x, sel_y, NULL, mode);
@@ -174,35 +180,40 @@ interact()
 
         int c = getch();
 
-        if (mode == edit) {
-            set_escdelay(0);
+        if (c == KEY_RESIZE) {
+            print_book(b, tab);
+            refresh();
+        }
 
-            if (c == 27) {
+        if (mode == edit) {
+            switch (c) {
+            case 27:
                 mode = command;
+                break;
             }
         }
 
-        if(mode == command) {
+        else if(mode == command) {
             switch (c) {
-            case KEY_RIGHT:
+            case KEY_RIGHT: case 'l': case 'e':
                 sel_x++;
                 break;
 
-            case KEY_LEFT:
+            case KEY_LEFT: case 'h': case 'b':
                 if(sel_x > 0)
                     sel_x--;
                 break;
 
-            case KEY_UP:
+            case KEY_UP: case 'k':
                 if(sel_y > 0)
                     sel_y--;
                 break;
 
-            case KEY_DOWN:
+            case KEY_DOWN: case 'j':
                 sel_y++;
                 break;
             
-            case 'i':
+            case 'i': case 'a':
                 mode = edit;
                 break;
             }

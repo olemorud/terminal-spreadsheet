@@ -15,11 +15,14 @@
 #define N_CELLS_HEIGHT 5
 
 
-#define COLOR_LIGHTER_GRAY 10
-#define COLOR_LIGHT_GRAY 11
-#define COLOR_GRAY 12
-#define COLOR_COMMANDMODE 13
-#define COLOR_EDITMODE 14
+#define COLOR_TITLE 20
+#define COLOR_BACKGROUND 21
+#define COLOR_LIGHTER_GRAY 22
+#define COLOR_LIGHT_GRAY 23
+#define COLOR_GRAY 24
+#define COLOR_COMMANDMODE 25
+#define COLOR_EDITMODE 26
+
 
 
 enum modes {edit, command};
@@ -29,7 +32,7 @@ enum modes {edit, command};
 //void print_sheet(struct sheet *s);
 
 void print_book(struct book *b, size_t tab);
-void display_init();
-void interact();
+void init_display();
+void interact(struct book *b, int tab);
 
 #endif
