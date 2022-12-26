@@ -6,6 +6,7 @@ void
 init_book(struct book *b, char *title)
 {
     b->n_sheets = 0;
+    b->sheets = malloc(sizeof(struct sheet*));
     add_sheet(b);
 
     (b->sheets)[1] = NULL;
