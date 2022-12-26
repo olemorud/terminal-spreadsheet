@@ -1,8 +1,8 @@
 
 CC	   := gcc
-CFLAGS   := -g -Wall -Werror
+CFLAGS   := -O1 -g -Wall -Werror -fsanitize=address -fno-omit-frame-pointer
 CPPFLAGS := -Iinclude -MMD -MP
-LDFLAGS  :=
+LDFLAGS  := -g -fsanitize=address
 LDLIBS   := -lncurses
 
 SRC_DIR := src
