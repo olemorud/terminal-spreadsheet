@@ -12,12 +12,12 @@
 #define COLOR_LIGHTER_GRAY 22
 #define COLOR_LIGHT_GRAY 23
 #define COLOR_GRAY 24
-#define COLOR_COMMANDMODE 25
+#define COLOR_HIGHLIGHTED 25
 #define COLOR_EDITMODE 26
 
 void handle_resize();
 
-void highlight(int x, int y, struct cell *c);
+void highlight(int const x, int const y, struct cell *c);
 
 void init_display(struct book *book);
 
@@ -37,6 +37,8 @@ void prev_tab();
 
 void print_book(struct book *b, size_t tab);
 
-void write_status(char const *const s);
+void write_right_status(char const *const s);
+
+int get_cell_color(int const row, int const col);
 
 #endif

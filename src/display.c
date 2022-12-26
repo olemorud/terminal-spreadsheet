@@ -10,6 +10,10 @@
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
+
+void highlight(int const row, int const col, struct cell *c);
+
+
 int display_sel_x = 0;
 int display_sel_y = 0;
 int tab = 0;
@@ -43,8 +47,8 @@ init_display(struct book *book)
     init_color(COLOR_GRAY, 650, 650, 650);
     init_pair(COLOR_GRAY, COLOR_BLACK, COLOR_GRAY);
 
-    init_color(COLOR_COMMANDMODE, 800, 600, 600);
-    init_pair(COLOR_COMMANDMODE, COLOR_BLACK, COLOR_COMMANDMODE);
+    init_color(COLOR_HIGHLIGHTED, 800, 600, 600);
+    init_pair(COLOR_HIGHLIGHTED, COLOR_BLACK, COLOR_HIGHLIGHTED);
 
     init_color(COLOR_EDITMODE, 600, 800, 600);
     init_pair(COLOR_EDITMODE, COLOR_BLACK, COLOR_EDITMODE);
@@ -58,21 +62,31 @@ init_display(struct book *book)
     print_book(b, tab);
 
     highlight(0, 0, NULL);
+    write_right_status("Normal");
 
     refresh();
 }
 
-void
-print_cell(int n, char *content)
+int
+get_cell_color(int const row, int const col)
 {
+    return (row + col) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
+}
+
+void
+print_cell(int row, int col, char *content)
+{
+    int color;
+
     if (content == NULL) {
         content = "";
     }
 
-    int attr = n % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
-    attron(COLOR_PAIR(attr));
+    color = get_cell_color(row, col);
+
+    attron(COLOR_PAIR(color));
     printw("%-" STR(CELL_SIZE) "s", content);
-    attroff(COLOR_PAIR(attr));
+    attroff(COLOR_PAIR(color));
 }
 
 void
@@ -119,12 +133,12 @@ print_sheet(struct sheet *s)
         print_row_header(i);
     }
 
-    for (int i = 0; i < height; i++) {
+    for (int row = 0; row < height; row++) {
         addch('\n');
-        print_y_axis(i);
+        print_y_axis(row);
 
-        for (int j = 0; j < n_cells_wide; j++) {
-            print_cell(i + j, NULL);
+        for (int col = 0; col < n_cells_wide; col++) {
+            print_cell(row, col, NULL);
         }
     }
     attroff(COLOR_LIGHT_GRAY);
@@ -168,22 +182,22 @@ print_book(struct book *bk, size_t tab)
 }
 
 void
-highlight(int x, int y, struct cell *c)
+highlight(int const x, int const y, struct cell *c)
 {
     static int prev_x;
     static int prev_y;
     static struct cell *prev_c;
-    int attr;
+    int color;
 
-    attr = (prev_x + prev_y) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
-    attron(COLOR_PAIR(attr));
+    color = get_cell_color(prev_y, prev_x);
+    attron(COLOR_PAIR(color));
     mvprintw(prev_y + 2, prev_x * CELL_SIZE + Y_AXIS_WIDTH,
              "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
 
-    attron(COLOR_PAIR(COLOR_COMMANDMODE));
+    attron(COLOR_PAIR(COLOR_HIGHLIGHTED));
     mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s",
              c ? c->text : "");
-    attroff(COLOR_PAIR(attr));
+    attroff(COLOR_PAIR(color));
 
     move(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH + 1);
 
@@ -250,13 +264,14 @@ handle_resize()
 }
 
 void
-write_status(char const *const s)
+write_right_status(char const *const s)
 {
     int x, y;
     getmaxyx(stdscr, y, x);
 
     attron(COLOR_PAIR(COLOR_TITLE));
-    mvprintw(y-1, x-1-strlen(s), "%s", s);
+    mvprintw(y - 1, x - 1 - strlen(s), "%s", s);
+    attron(COLOR_PAIR(COLOR_TITLE));
 }
 
 void
