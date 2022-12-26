@@ -8,12 +8,6 @@
 #include <stdio.h>
 #include <stdio.h>
 
-#define CELL_SIZE 12
-#define TAB_SIZE 24
-#define Y_AXIS_WIDTH 4
-#define N_CELLS_WIDTH 5
-#define N_CELLS_HEIGHT 5
-
 
 #define COLOR_TITLE 20
 #define COLOR_BACKGROUND 21
