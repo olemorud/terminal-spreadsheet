@@ -112,6 +112,22 @@ print_sheet(struct sheet *s)
     attroff(COLOR_LIGHT_GRAY);
 }
 
+
+void
+print_command_bar(){
+    int width, height;
+
+    getyx(stdscr, height, width);
+
+    move(height+1, 0);
+
+    attron(COLOR_PAIR(COLOR_TITLE));
+    for (int i=0; i<width; i++) {
+        addch(' ');
+    }
+}
+
+
 void
 print_book(struct book *b, size_t tab)
 {
@@ -130,6 +146,8 @@ print_book(struct book *b, size_t tab)
     attron(COLOR_PAIR(COLOR_BACKGROUND));
 
     print_sheet(b->sheets[tab]);
+
+    print_command_bar();   
 }
 
 void
