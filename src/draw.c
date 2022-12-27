@@ -97,14 +97,27 @@ draw_empty_cell(int row, int col)
 void
 draw_cell(struct cell const *const cell)
 {
-    int x = CELL_SIZE * (cell->x_pos) + Y_AXIS_WIDTH;
-    int y = cell->y_pos + 2;
-    move(y, x);
+    int x = cell_x_pos(cell->x_pos);
+    int y = cell_y_pos(cell->y_pos);
 
     int color = get_cell_color(y, x);
 
+    move(y, x);
+
     attron(COLOR_PAIR(color));
+
+    switch(cell->type){
+        case Integer:
+            printw("%" STR(CELL_SIZE) "li", cell->value.integer);
+            break;
+        case Floating:
+            printw("%-" STR(CELL_SIZE) "lf", cell->value.floating);
+            break;
+        default:
     printw("%-" STR(CELL_SIZE) "s", cell->text);
+            break;
+    }
+
     attroff(COLOR_PAIR(color));
 }
 

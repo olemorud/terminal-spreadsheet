@@ -168,6 +168,13 @@ mode_edit()
 }
 
 void
+commit_cell_change()
+{
+    set_type(g_cur);
+    draw_cell(g_cur);
+}
+
+void
 interact(struct book *b)
 {
     while (1) {

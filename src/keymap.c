@@ -62,6 +62,9 @@ parse_key(size_t c, enum modes mode)
             editor_append(c);
             return;
         }
+        if (c == 27) {
+            commit_cell_change();
+        }
         break;
     }
 

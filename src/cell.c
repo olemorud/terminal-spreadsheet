@@ -25,3 +25,24 @@ delete_cell(struct cell *c)
     free(c->text);
     free(c);
 }
+
+void
+set_type(struct cell *cell)
+{
+    char *endptr;
+    int i = strtoll(cell->text, &endptr, 10);
+
+    if (*endptr == '\0') {
+        cell->type = Integer;
+        cell->value.integer = i;
+        return;
+    }
+
+    int d = strtold(cell->text, &endptr);
+
+    if (*endptr == '\0') {
+        cell->type = Floating;
+        cell->value.floating = d;
+        return;
+    }
+}

@@ -20,6 +20,7 @@ void editor_backspace();
 void mode_g();
 void mode_edit();
 void mode_normal();
+void commit_cell_change();
 
 
 
