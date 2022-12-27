@@ -85,21 +85,6 @@ get_cell_color(int const row, int const col)
 }
 
 void
-draw_empty_cell(int row, int col)
-{
-    int color;
-
-    color = get_cell_color(row, col);
-
-    //mvchgat(cell_y_pos(row), cell_x_pos(col), CELL_SIZE, 0, color, NULL);
-    attron(COLOR_PAIR(color));
-    mvprintw(cell_y_pos(row),
-             cell_x_pos(col),
-             "%" STR(CELL_SIZE) "s", " ");
-    attroff(COLOR_PAIR(color));
-}
-
-void
 draw_cell(struct cell const *const cell)
 {
     int x = cell_x_pos(cell->x_pos);
@@ -169,29 +154,36 @@ void
 draw_sheet(struct sheet *s)
 {
     addch('\n');
-    attron(COLOR_PAIR(COLOR_GRAY));
-    printw("%" STR(Y_AXIS_WIDTH) "s", "");
-    attroff(COLOR_PAIR(COLOR_GRAY));
 
     int width = getmaxx(stdscr) - Y_AXIS_WIDTH;
-    int height = getmaxy(stdscr) - 3;
-
     int n_cells_wide = width / CELL_SIZE;
+    int n_cells_tall = getmaxy(stdscr) - 3;
 
+    // print row headers
+    chgat(Y_AXIS_WIDTH, 0, COLOR_GRAY, NULL);
     for (int i = 0; i < n_cells_wide; i++) {
         draw_row_header(i);
     }
 
-    for (int row = 0; row < height; row++) {
+    // clear sheet before drawing on top
+    for (int row = 0; row < n_cells_tall; row++) {
+        int color;
         addch('\n');
         draw_row_num(row);
 
         for (int col = 0; col < n_cells_wide; col++) {
-            draw_empty_cell(row, col);
+            color = get_cell_color(row, col);
+
+            attron(COLOR_PAIR(color));
+
+            mvprintw(cell_y_pos(row),
+                    cell_x_pos(col),
+                    "%" STR(CELL_SIZE) "s", " ");
         }
+        attroff(COLOR_PAIR(color));
     }
-    attroff(COLOR_LIGHT_GRAY);
     
+    // draw on top of empty sheet
     draw_cells_in_tree(s->root_cell);
 }
 
