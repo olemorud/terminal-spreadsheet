@@ -91,7 +91,12 @@ draw_empty_cell(int row, int col)
 
     color = get_cell_color(row, col);
 
-    mvchgat(cell_y_pos(row), cell_x_pos(col), CELL_SIZE, 0, color, NULL);
+    //mvchgat(cell_y_pos(row), cell_x_pos(col), CELL_SIZE, 0, color, NULL);
+    attron(COLOR_PAIR(color));
+    mvprintw(cell_y_pos(row),
+             cell_x_pos(col),
+             "%" STR(CELL_SIZE) "s", " ");
+    attroff(COLOR_PAIR(color));
 }
 
 void
@@ -114,7 +119,7 @@ draw_cell(struct cell const *const cell)
             printw("%-" STR(CELL_SIZE) "lf", cell->value.floating);
             break;
         default:
-    printw("%-" STR(CELL_SIZE) "s", cell->text);
+            printw("%-" STR(CELL_SIZE) "s", cell->text);
             break;
     }
 
