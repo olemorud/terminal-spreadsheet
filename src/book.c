@@ -1,6 +1,8 @@
 #include "book.h"
 #include "config.h"
-#include "sheet.h"
+#include <err.h>
+#include <stdlib.h>
+#include <string.h>
 
 void
 init_book(struct book *b, char *title)

@@ -1,19 +1,11 @@
 
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#ifndef DRAW_H
+#define DRAW_H
 
-#include "sheet.h"
+
 #include "book.h"
+#include <stddef.h>
 #include "cell.h"
-#include <stdio.h>
-
-#define COLOR_TITLE 20
-#define COLOR_BACKGROUND 21
-#define COLOR_LIGHTER_GRAY 22
-#define COLOR_LIGHT_GRAY 23
-#define COLOR_GRAY 24
-#define COLOR_HIGHLIGHTED 25
-#define COLOR_EDITMODE 26
 
 void handle_resize();
 

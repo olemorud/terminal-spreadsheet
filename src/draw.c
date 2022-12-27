@@ -2,12 +2,11 @@
 #include "draw.h"
 #include "cell.h"
 #include "celltree.h"
-#include <curses.h>
-#include <ncurses.h>
-#include <signal.h>
-#include "config.h"
-#include "keymap.h"
-#include <string.h>
+#include "config.h"     // colors, sizes ...
+#include "sheet.h"      // struct sheet
+#include <ncurses.h>    // ncurses functions
+#include <signal.h>     // handle sigterm
+#include <string.h>     // strlen
 
 #define _STR(x) #x
 #define STR(x) _STR(x)

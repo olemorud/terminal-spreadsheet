@@ -3,10 +3,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 #include <time.h>
-#include <stdlib.h>
-#include <err.h>
+#include "common.h"
 
 enum cell_type {
     Text,

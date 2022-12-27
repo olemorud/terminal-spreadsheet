@@ -1,7 +1,6 @@
 #ifndef CELLTREE_H
 #define CELLTREE_H
 
-#include <stdlib.h>
 #include <stdbool.h>
 #include "cell.h"
 

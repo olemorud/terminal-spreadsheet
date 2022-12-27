@@ -1,10 +1,8 @@
 #ifndef BOOK_H
 #define BOOK_H
 
-#include "config.h"
 #include "sheet.h"
-#include <err.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 struct book {
   struct sheet **sheets;

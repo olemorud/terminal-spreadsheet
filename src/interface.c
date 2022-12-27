@@ -2,6 +2,9 @@
 #include <curses.h>
 #include <stdlib.h>
 #include "interface.h"
+#include "celltree.h"
+#include "keymap.h"
+#include "draw.h"
 
 int g_display_sel_x = 0;
 int g_display_sel_y = 0;

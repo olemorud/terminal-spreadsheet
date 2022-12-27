@@ -2,12 +2,7 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include <stddef.h>
-#include "draw.h"
-#include <ncurses.h>
-#include "celltree.h"
-#include "keymap.h"
-
+#include "book.h"
 
 void init_interface(struct book *b);
 void move_right();

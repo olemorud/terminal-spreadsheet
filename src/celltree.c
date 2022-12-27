@@ -1,4 +1,5 @@
 #include "celltree.h"
+#include <stdlib.h>
 
 void
 delete_cell_tree(struct cell_tree_node *root)

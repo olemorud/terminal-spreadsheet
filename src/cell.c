@@ -1,4 +1,7 @@
 #include "cell.h"
+#include <stdlib.h>
+#include <err.h>
+#include <string.h>
 
 void
 init_cell(struct cell *c, size_t x, size_t y, char *text, enum cell_type type)
