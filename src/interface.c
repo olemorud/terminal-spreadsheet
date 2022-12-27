@@ -1,7 +1,7 @@
 
+#include "interface.h"
 #include <curses.h>
 #include <stdlib.h>
-#include "interface.h"
 #include "celltree.h"
 #include "keymap.h"
 #include "draw.h"
@@ -101,7 +101,7 @@ editor_backspace()
     move(y, x - 1);
 
     g_cur->text = realloc(g_cur->text, textlen);
-    g_cur->text[textlen-1] = '\0';
+    g_cur->text[textlen - 1] = '\0';
 
     refresh();
 }
@@ -113,9 +113,9 @@ editor_append(const char c)
 
     size_t textlen = strlen(g_cur->text);
 
-    g_cur->text = realloc(g_cur->text, textlen+2);
+    g_cur->text = realloc(g_cur->text, textlen + 2);
     g_cur->text[textlen] = c;
-    g_cur->text[textlen+1] = '\0';
+    g_cur->text[textlen + 1] = '\0';
 
     getyx(stdscr, y, x);
     draw_cell(g_cur);
@@ -128,7 +128,7 @@ start_edit_cell()
 {
     /* struct cell* cur */
     g_cur = search_tree(g_book->sheets[g_tab]->root_cell, g_display_sel_x,
-                      g_display_sel_y);
+                        g_display_sel_y);
 
     if (g_cur == NULL) {
         g_cur = malloc(sizeof(struct cell));
@@ -190,7 +190,7 @@ interact(struct book *b)
         int x, y;
         getmaxyx(stdscr, y, x);
 
-        move(y-1, x-1);
+        move(y - 1, x - 1);
 
         int c = getch();
         parse_key(c, mode);
