@@ -30,3 +30,4 @@ Low priority
 [misc.]
 - Decide and implement data structure for insertion/search of cells (currently BST, maybe red-black-tree?)
 - Use BST magic to find relevant subtree to print given an scroll_x and scroll_y
+- Remove cells from BST when they are empty
