@@ -116,7 +116,7 @@ draw_cell(struct cell const *const cell)
             printw("%" STR(CELL_SIZE) "li", cell->value.integer);
             break;
         case Floating:
-            printw("%-" STR(CELL_SIZE) "lf", cell->value.floating);
+            printw("%" STR(CELL_SIZE) "lf", cell->value.floating);
             break;
         default:
             printw("%-" STR(CELL_SIZE) "s", cell->text);
