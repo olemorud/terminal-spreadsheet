@@ -203,21 +203,21 @@ draw_input_bar()
 }
 
 void
-draw_book(struct book *bk, size_t tab)
+draw_book(struct book *book, size_t tab)
 {
     move(0, 0);
     attron(COLOR_PAIR(COLOR_TITLE));
-    printw(" %s ", bk->title);
+    printw(" %s ", book->title);
     attroff(COLOR_PAIR(COLOR_TITLE));
 
-    for (size_t i = 0; i < bk->n_sheets; i++) {
+    for (size_t i = 0; i < book->n_sheets; i++) {
         int attr = tab == i ? COLOR_GRAY : COLOR_LIGHT_GRAY;
         attron(COLOR_PAIR(attr));
-        printw("%10s ", bk->sheets[i]->title);
+        printw("%10s ", book->sheets[i]->title);
         attroff(COLOR_PAIR(attr));
     }
 
-    draw_sheet(bk->sheets[tab]);
+    draw_sheet(book->sheets[tab]);
 
     draw_input_bar();
 }
