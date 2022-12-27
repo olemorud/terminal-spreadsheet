@@ -15,6 +15,8 @@ int g_tab = 0;
 struct book *g_book = NULL;
 struct cell *g_cur = NULL;
 
+enum modes mode = Command;
+
 void
 init_interface(struct book *b)
 {
@@ -25,39 +27,41 @@ void
 move_right()
 {
     g_display_sel_x++;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
+    highlight(g_display_sel_x, g_display_sel_y);
 }
 
 void
 move_left()
 {
-    if (g_display_sel_x > 0)
-        g_display_sel_x--;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
+    if (g_display_sel_x == 0)
+        return;
+
+    g_display_sel_x--;
+    highlight(g_display_sel_x, g_display_sel_y);
 }
 
 void
 move_up()
 {
-    if (g_display_sel_y > 0)
-        g_display_sel_y--;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
+    if (g_display_sel_y == 0)
+        return;
+
+    g_display_sel_y--;
+    highlight(g_display_sel_x, g_display_sel_y);
 }
 
 void
 move_down()
 {
     g_display_sel_y++;
-    highlight(g_display_sel_x, g_display_sel_y, NULL);
+    highlight(g_display_sel_x, g_display_sel_y);
 }
 
 void
 next_tab()
 {
     g_tab++;
-    if (g_tab >= g_book->n_sheets) {
-        g_tab = 0;
-    }
+    g_tab %= g_book->n_sheets;
     draw_book(g_book, g_tab);
 }
 
@@ -105,12 +109,17 @@ editor_backspace()
 void
 editor_append(const char c)
 {
+    int x, y;
+
     size_t textlen = strlen(g_cur->text);
 
     g_cur->text = realloc(g_cur->text, textlen+2);
     g_cur->text[textlen] = c;
     g_cur->text[textlen+1] = '\0';
 
+    getyx(stdscr, y, x);
+    draw_cell(g_cur);
+    move(y, x);
     refresh();
 }
 
@@ -131,12 +140,45 @@ start_edit_cell()
 }
 
 void
+mode_normal()
+{
+    write_right_status("Normal");
+    mode = Command;
+    curs_set(0);
+}
+
+void
+mode_g()
+{
+    write_right_status("g");
+    mode = G;
+}
+
+void
+mode_edit()
+{
+    mode = Edit;
+
+    write_right_status("Insert");
+
+    curs_set(1);
+    echo();
+
+    start_edit_cell();
+}
+
+void
 interact(struct book *b)
 {
     while (1) {
         refresh();
 
+        int x, y;
+        getmaxyx(stdscr, y, x);
+
+        move(y-1, x-1);
+
         int c = getch();
-        parse_key(c);
+        parse_key(c, mode);
     }
 }

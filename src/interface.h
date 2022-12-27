@@ -17,6 +17,9 @@ void start_edit_cell();
 void interact(struct book *b);
 void editor_append(const char c);
 void editor_backspace();
+void mode_g();
+void mode_edit();
+void mode_normal();
 
 
 

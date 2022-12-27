@@ -4,11 +4,7 @@
 #include "interface.h"
 #include <curses.h>
 
-void mode_g();
-void mode_edit();
-void mode_normal();
 
-enum modes mode = Command;
 
 void * const keymap_always[1024] = {
     [KEY_RESIZE] = handle_resize,
@@ -47,37 +43,9 @@ undefined()
     printw("key not defined");
 }
 
-void
-mode_normal()
-{
-    write_right_status("Normal");
-    mode = Command;
-    curs_set(0);
-
-}
 
 void
-mode_g()
-{
-    write_right_status("g");
-    mode = G;
-}
-
-void
-mode_edit()
-{
-    mode = Edit;
-
-    write_right_status("Insert");
-
-    curs_set(1);
-    echo();
-
-    start_edit_cell();
-}
-
-void
-parse_key(size_t c)
+parse_key(size_t c, enum modes mode)
 {
     void (*cmd)(void) = NULL;
 

@@ -5,8 +5,7 @@
 #include "common.h"
 #include <stddef.h>
 
-void parse_key(size_t c);
+void parse_key(size_t c, enum modes mode);
 
-enum modes {Edit, Command, G};
 
 #endif
