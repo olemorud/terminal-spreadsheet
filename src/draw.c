@@ -11,7 +11,7 @@
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
-void highlight(int const row, int const col, struct cell *c);
+void highlight(int const row, int const col);
 
 void
 cleanup()
@@ -26,7 +26,6 @@ cleanup()
 void
 init_draw(struct book *book)
 {
-
     initscr();
     atexit(cleanup);
     signal(SIGTERM, exit);
@@ -57,14 +56,26 @@ init_draw(struct book *book)
 
     init_pair(COLOR_BACKGROUND, COLOR_MAGENTA, COLOR_GREEN);
 
-    attrset(COLOR_PAIR(COLOR_BACKGROUND));
+    bkgdset(COLOR_PAIR(COLOR_BACKGROUND));
 
     draw_book(book, 0);
 
-    highlight(0, 0, NULL);
+    highlight(0, 0);
     write_right_status("Normal");
 
     refresh();
+}
+
+int
+cell_x_pos(int x)
+{
+    return x * CELL_SIZE + Y_AXIS_WIDTH;
+}
+
+int
+cell_y_pos(int y)
+{
+    return y + 2;
 }
 
 int
@@ -74,19 +85,39 @@ get_cell_color(int const row, int const col)
 }
 
 void
-draw_cell(int row, int col, char *content)
+draw_empty_cell(int row, int col)
 {
     int color;
 
-    if (content == NULL) {
-        content = "";
-    }
-
     color = get_cell_color(row, col);
 
+    mvchgat(cell_y_pos(row), cell_x_pos(col), CELL_SIZE, 0, color, NULL);
+}
+
+void
+draw_cell(struct cell const *const cell)
+{
+    int x = CELL_SIZE * (cell->x_pos) + Y_AXIS_WIDTH;
+    int y = cell->y_pos + 2;
+    move(y, x);
+
+    int color = get_cell_color(y, x);
+
     attron(COLOR_PAIR(color));
-    printw("%-" STR(CELL_SIZE) "s", content);
+    printw("%-" STR(CELL_SIZE) "s", cell->text);
     attroff(COLOR_PAIR(color));
+}
+
+void
+draw_cells_in_tree(struct cell_tree_node const *const root)
+{
+    if (root == NULL) {
+        return;
+    }
+
+    draw_cell(root->cell);
+    draw_cells_in_tree(root->right);
+    draw_cells_in_tree(root->left);
 }
 
 void
@@ -138,10 +169,12 @@ draw_sheet(struct sheet *s)
         draw_row_num(row);
 
         for (int col = 0; col < n_cells_wide; col++) {
-            draw_cell(row, col, NULL);
+            draw_empty_cell(row, col);
         }
     }
     attroff(COLOR_LIGHT_GRAY);
+    
+    draw_cells_in_tree(s->root_cell);
 }
 
 void
@@ -174,42 +207,32 @@ draw_book(struct book *bk, size_t tab)
         attroff(COLOR_PAIR(attr));
     }
 
-    attron(COLOR_PAIR(COLOR_BACKGROUND));
-
     draw_sheet(bk->sheets[tab]);
 
     draw_input_bar();
 }
 
-
 /* highlights relative to screen */
 void
-highlight(int const x, int const y, struct cell *c)
+highlight(int const x, int const y)
 {
     static int prev_x;
     static int prev_y;
-    static struct cell *prev_c;
     int color;
 
+    mvchgat(cell_y_pos(y), cell_x_pos(x), CELL_SIZE, 0, COLOR_HIGHLIGHTED,
+            NULL);
+
     color = get_cell_color(prev_y, prev_x);
-    attron(COLOR_PAIR(color));
-    mvprintw(prev_y + 2, prev_x * CELL_SIZE + Y_AXIS_WIDTH,
-             "%" STR(CELL_SIZE) "s", prev_c ? prev_c->text : "");
 
-    attron(COLOR_PAIR(COLOR_HIGHLIGHTED));
-    mvprintw(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH, "%" STR(CELL_SIZE) "s",
-             c ? c->text : "");
-    attroff(COLOR_PAIR(color));
-
-    move(y + 2, x * CELL_SIZE + Y_AXIS_WIDTH + 1);
+    mvchgat(cell_y_pos(prev_y), cell_x_pos(prev_x), CELL_SIZE, 0, color, NULL);
 
     prev_x = x;
     prev_y = y;
-    prev_c = c;
 }
 
 void
-handle_resize(struct book* b, int tab)
+handle_resize(struct book *b, int tab)
 {
     draw_book(b, tab);
     refresh();
@@ -224,4 +247,3 @@ write_left_command(char const *const s)
     mvprintw(y - 1, 1, "%s", s);
     attron(COLOR_PAIR(COLOR_TITLE));
 }
-
