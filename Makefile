@@ -1,6 +1,6 @@
 
 CC	   := gcc
-CFLAGS   := -O1 -g -Wall -Werror -fsanitize=address -fno-omit-frame-pointer
+CFLAGS   := -O0 -g -Wall -Werror -fsanitize=address -fno-omit-frame-pointer
 CPPFLAGS := -Iinclude -MMD -MP
 LDFLAGS  := -g -fsanitize=address
 LDLIBS   := -lncurses
