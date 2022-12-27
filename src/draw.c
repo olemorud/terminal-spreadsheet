@@ -242,13 +242,6 @@ highlight(int const x, int const y)
 }
 
 void
-handle_resize(struct book *b, int tab)
-{
-    draw_book(b, tab);
-    refresh();
-}
-
-void
 write_left_command(char const *const s)
 {
     int y = getmaxy(stdscr);

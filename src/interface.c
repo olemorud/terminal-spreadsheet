@@ -175,6 +175,13 @@ commit_cell_change()
 }
 
 void
+handle_resize()
+{
+    draw_book(g_book, g_tab);
+    refresh();
+}
+
+void
 interact(struct book *b)
 {
     while (1) {

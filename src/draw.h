@@ -21,7 +21,6 @@ void write_right_status(char const *const s);
 
 int get_cell_color(int const row, int const col);
 
-void handle_resize(struct book* b, int tab);
 
 void write_left_command(const char *const s);
 

@@ -4,6 +4,7 @@
 
 #include "book.h"
 
+void handle_resize();
 void init_interface(struct book *b);
 void move_right();
 void move_left();
