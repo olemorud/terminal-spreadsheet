@@ -50,7 +50,6 @@ void interface_editor_append(const char c);
 /* Remove last char */
 void interface_editor_backspace();
 
-
 /*
  * Mode switching
  * --------------
@@ -64,6 +63,5 @@ void interface_mode_edit();
 
 /* switch to normal mode */
 void interface_mode_normal();
-
 
 #endif

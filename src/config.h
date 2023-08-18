@@ -3,12 +3,11 @@
 #define CONFIG_H
 
 // strings
-#define DEFAULT_BOOK_TITLE  "Untitled"
+#define DEFAULT_BOOK_TITLE "Untitled"
 #define DEFAULT_SHEET_TITLE "Sheet "
-#define DEFAULT_HEIGHT      40
-#define DEFAULT_WIDTH       80
-#define MAX_STR             64
-
+#define DEFAULT_HEIGHT 40
+#define DEFAULT_WIDTH 80
+#define MAX_STR 64
 
 // dimensions
 #define CELL_SIZE 12
@@ -16,7 +15,6 @@
 #define Y_AXIS_WIDTH 4
 #define N_CELLS_WIDTH 5
 #define N_CELLS_HEIGHT 5
-
 
 // colors
 #define COLOR_TITLE 20

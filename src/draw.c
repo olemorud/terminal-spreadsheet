@@ -2,16 +2,17 @@
 #include "draw.h"
 #include "cell.h"
 #include "celltree.h"
-#include "config.h"     // colors, sizes ...
-#include "sheet.h"      // struct sheet
-#include <ncurses.h>    // ncurses functions
-#include <signal.h>     // handle sigterm
-#include <string.h>     // strlen
+#include "config.h" // colors, sizes ...
+#include "sheet.h" // struct sheet
+#include <ncurses.h> // ncurses functions
+#include <signal.h> // handle sigterm
+#include <string.h> // strlen
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
-static void cleanup()
+static void
+cleanup()
 {
     clear();
     echo();
@@ -20,17 +21,20 @@ static void cleanup()
     endwin();
 }
 
-static int x_pos(int x)
+static int
+x_pos(int x)
 {
     return x * CELL_SIZE + Y_AXIS_WIDTH;
 }
 
-static int y_pos(int y)
+static int
+y_pos(int y)
 {
     return y + 2;
 }
 
-static int get_cell_color(int const row, int const col)
+static int
+get_cell_color(int const row, int const col)
 {
     return (row + col) % 2 ? COLOR_LIGHTER_GRAY : COLOR_LIGHT_GRAY;
 }
@@ -77,7 +81,7 @@ void draw_init(struct book *book)
     refresh();
 }
 
-void draw_cell(struct cell const * const cell)
+void draw_cell(struct cell const *const cell)
 {
     int x = x_pos(cell->x_pos);
     int y = y_pos(cell->y_pos);
@@ -88,22 +92,23 @@ void draw_cell(struct cell const * const cell)
 
     attron(COLOR_PAIR(color));
 
-    switch(cell->type){
-        case Integer:
-            printw("%" STR(CELL_SIZE) "li", cell->value.integer);
-            break;
-        case Floating:
-            printw("%" STR(CELL_SIZE) "lf", cell->value.floating);
-            break;
-        default:
-            printw("%-" STR(CELL_SIZE) "s", cell->text);
-            break;
+    switch (cell->type) {
+    case Integer:
+        printw("%" STR(CELL_SIZE) "li", cell->value.integer);
+        break;
+    case Floating:
+        printw("%" STR(CELL_SIZE) "lf", cell->value.floating);
+        break;
+    default:
+        printw("%-" STR(CELL_SIZE) "s", cell->text);
+        break;
     }
 
     attroff(COLOR_PAIR(color));
 }
 
-static void draw_celltree(struct celltree const *const root)
+static void
+draw_celltree(struct celltree const *const root)
 {
     if (root == NULL) {
         return;
@@ -114,18 +119,20 @@ static void draw_celltree(struct celltree const *const root)
     draw_celltree(root->left);
 }
 
-static void draw_row_num(int n)
+static void
+draw_row_num(int n)
 {
     attron(COLOR_PAIR(COLOR_GRAY));
     printw("%" STR(Y_AXIS_WIDTH) "d", n);
     attroff(COLOR_PAIR(COLOR_GRAY));
 }
 
-static void draw_row_header(int row)
+static void
+draw_row_header(int row)
 {
     // TODO: make it dynamic
     char buf[4] = "   ";
-    int i = sizeof buf - 2;
+    int  i      = sizeof buf - 2;
     row++;
 
     while (row && i >= 0) {
@@ -139,11 +146,12 @@ static void draw_row_header(int row)
     attroff(COLOR_PAIR(COLOR_GRAY));
 }
 
-static void draw_sheet(struct sheet *s)
+static void
+draw_sheet(struct sheet *s)
 {
     addch('\n');
 
-    int width = getmaxx(stdscr) - Y_AXIS_WIDTH;
+    int width        = getmaxx(stdscr) - Y_AXIS_WIDTH;
     int n_cells_wide = width / CELL_SIZE;
     int n_cells_tall = getmaxy(stdscr) - 3;
 
@@ -164,18 +172,17 @@ static void draw_sheet(struct sheet *s)
 
             attron(COLOR_PAIR(color));
 
-            mvprintw(y_pos(row),
-                    x_pos(col),
-                    "%" STR(CELL_SIZE) "s", " ");
+            mvprintw(y_pos(row), x_pos(col), "%" STR(CELL_SIZE) "s", " ");
         }
         attroff(COLOR_PAIR(color));
     }
-    
+
     // draw on top of empty sheet
     draw_celltree(s->root_cell);
 }
 
-static void draw_input_bar()
+static void
+draw_input_bar()
 {
     int width, height;
 
@@ -213,10 +220,9 @@ void draw_highlight(int const x, int const y)
 {
     static int prev_x;
     static int prev_y;
-    int color;
+    int        color;
 
-    mvchgat(y_pos(y), x_pos(x), CELL_SIZE, 0, COLOR_HIGHLIGHTED,
-            NULL);
+    mvchgat(y_pos(y), x_pos(x), CELL_SIZE, 0, COLOR_HIGHLIGHTED, NULL);
 
     color = get_cell_color(prev_y, prev_x);
 
@@ -244,4 +250,3 @@ void draw_right_status(char const *const s)
     mvprintw(y - 1, x - 1 - strlen(s), "%s", s);
     attron(COLOR_PAIR(COLOR_TITLE));
 }
-

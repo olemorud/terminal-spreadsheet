@@ -1,17 +1,15 @@
 #ifndef CELL_H
 #define CELL_H
 
+#include "common.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
-#include "common.h"
 
-enum cell_type {
-    Text,
-    Integer,
-    Floating,
-    Date
-};
+enum cell_type { Text,
+                 Integer,
+                 Floating,
+                 Date };
 
 struct cell_list {
     struct cell      *cell;

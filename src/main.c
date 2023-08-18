@@ -1,12 +1,11 @@
 #include "book.h"
-#include "draw.h"
 #include "config.h"
+#include "draw.h"
 #include "interface.h"
 #include "sheet.h"
 #include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 
 int main(int argc, char **argv)
 {

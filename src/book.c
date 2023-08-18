@@ -7,7 +7,7 @@
 void book_init(struct book *b, char *title)
 {
     b->n_sheets = 0;
-    b->sheets = malloc(0);
+    b->sheets   = malloc(0);
     if (!book_add_sheet(b))
         exit(1);
 
@@ -39,7 +39,7 @@ bool book_add_sheet(struct book *b)
 
     b->n_sheets++;
 
-    void* tmp = realloc(b->sheets, sizeof(struct sheet*) * (b->n_sheets + 1));
+    void *tmp = realloc(b->sheets, sizeof(struct sheet *) * (b->n_sheets + 1));
     if (tmp == NULL)
         return false;
     b->sheets = tmp;
@@ -49,7 +49,7 @@ bool book_add_sheet(struct book *b)
     s = malloc(sizeof(struct sheet));
     sheet_init(s, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_SHEET_TITLE);
 
-    b->sheets[b->n_sheets-1] = s;
+    b->sheets[b->n_sheets - 1] = s;
 
     return true;
 }

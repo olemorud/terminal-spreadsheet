@@ -1,10 +1,11 @@
 #include "celltree.h"
-#include <stdlib.h>
-#include <errno.h>
 #include <err.h>
+#include <errno.h>
+#include <stdlib.h>
 
 /* returns true if (ax,ay) `greater than` (bx,by) */
-static bool greater_than(int x_a, int y_a, int x_b, int y_b)
+static bool
+greater_than(int x_a, int y_a, int x_b, int y_b)
 {
     if (x_a == x_b)
         return y_a > y_b;
@@ -25,7 +26,8 @@ void celltree_delete(struct celltree *root)
     free(root);
 }
 
-struct cell* celltree_search(struct celltree *root, size_t x, size_t y)
+struct cell *
+celltree_search(struct celltree *root, size_t x, size_t y)
 {
     if (root == NULL) {
         return NULL;
@@ -50,9 +52,9 @@ void celltree_insert(struct celltree **root, struct cell *c)
         *root = malloc(sizeof **root);
         if (*root == NULL)
             exit(errno);
-        (*root)->cell = c;
+        (*root)->cell  = c;
         (*root)->right = NULL;
-        (*root)->left = NULL;
+        (*root)->left  = NULL;
         return;
     }
 

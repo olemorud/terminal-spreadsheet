@@ -6,12 +6,12 @@
 
 #define KEY_ESC 27
 
-static void * const keymap_always[1024] = {
+static void *const keymap_always[1024] = {
     [KEY_RESIZE] = interface_handle_resize,
     [27] /*ESC*/ = interface_mode_normal,
 };
 
-static void * const keymap_normal[1024] = {
+static void *const keymap_normal[1024] = {
     ['i']       = interface_mode_edit,
     ['a']       = interface_mode_edit,
     ['g']       = interface_mode_g,
@@ -25,17 +25,18 @@ static void * const keymap_normal[1024] = {
     ['l']       = interface_move_right,
 };
 
-static void * const keymap_edit[1024] = {
-    [KEY_ESC]            = interface_mode_normal,
+static void *const keymap_edit[1024] = {
+    [KEY_ESC]       = interface_mode_normal,
     [KEY_BACKSPACE] = interface_editor_backspace,
 };
 
-static void * const keymap_g[1024] = {
+static void *const keymap_g[1024] = {
     ['t'] = interface_next_tab,
     ['T'] = interface_prev_tab,
 };
 
-static void undefined()
+static void
+undefined()
 {
     int height = getmaxy(stdscr);
     move(height - 1, 0);
@@ -55,7 +56,7 @@ void keymap_parse_key(size_t c, enum modes mode)
         break;
     case Edit:
         cmd = keymap_edit[c];
-        if (cmd == NULL){
+        if (cmd == NULL) {
             interface_editor_append(c);
             return;
         }
@@ -65,7 +66,7 @@ void keymap_parse_key(size_t c, enum modes mode)
         break;
     }
 
-    if(mode != Edit) {
+    if (mode != Edit) {
         mode = Command;
     }
 

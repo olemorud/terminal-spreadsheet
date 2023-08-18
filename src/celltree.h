@@ -1,8 +1,8 @@
 #ifndef CELLTREE_H
 #define CELLTREE_H
 
-#include <stdbool.h>
 #include "cell.h"
+#include <stdbool.h>
 
 /* TODO: implement red-black tree */
 struct celltree {

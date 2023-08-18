@@ -3,8 +3,8 @@
 
 void sheet_init(struct sheet *s, size_t width, size_t height, char *title)
 {
-    s->width = width;
-    s->height = height;
+    s->width     = width;
+    s->height    = height;
     s->root_cell = NULL;
 
     if (title) {

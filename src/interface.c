@@ -1,20 +1,20 @@
 
 #include "interface.h"
 #include "cell.h"
+#include "celltree.h"
+#include "draw.h"
+#include "keymap.h"
 #include <curses.h>
 #include <stdlib.h>
-#include "celltree.h"
-#include "keymap.h"
-#include "draw.h"
 
 int g_display_sel_x = 0;
 int g_display_sel_y = 0;
-int g_tab = 0;
-//int g_right_scrolled = 0;
-//int g_down_scrolled = 0;
+int g_tab           = 0;
+// int g_right_scrolled = 0;
+// int g_down_scrolled = 0;
 
 struct book *g_book = NULL;
-struct cell *g_cur = NULL;
+struct cell *g_cur  = NULL;
 
 enum modes mode = Command;
 
@@ -82,7 +82,7 @@ void interface_editor_backspace()
     getyx(stdscr, y, x);
     move(y, x - 1);
 
-    g_cur->text = realloc(g_cur->text, textlen);
+    g_cur->text              = realloc(g_cur->text, textlen);
     g_cur->text[textlen - 1] = '\0';
 
     refresh();
@@ -94,8 +94,8 @@ void interface_editor_append(const char c)
 
     size_t textlen = strlen(g_cur->text);
 
-    g_cur->text = realloc(g_cur->text, textlen + 2);
-    g_cur->text[textlen] = c;
+    g_cur->text              = realloc(g_cur->text, textlen + 2);
+    g_cur->text[textlen]     = c;
     g_cur->text[textlen + 1] = '\0';
 
     getyx(stdscr, y, x);
@@ -104,11 +104,12 @@ void interface_editor_append(const char c)
     refresh();
 }
 
-static void start_edit_cell()
+static void
+start_edit_cell()
 {
     // struct cell* cur
     g_cur = celltree_search(g_book->sheets[g_tab]->root_cell, g_display_sel_x,
-                        g_display_sel_y);
+                            g_display_sel_y);
 
     if (g_cur == NULL) {
         g_cur = malloc(sizeof(struct cell));
